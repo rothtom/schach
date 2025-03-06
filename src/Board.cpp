@@ -14,18 +14,24 @@ Board::Board(sf::RenderWindow& window) : window_(window) {
 };
 
 void Board::set_textures() {
-    sf::Vector2i piece_size(45, 45);
-    std::array<char, 6> piece_letters{'k', 'q', 'b', 'n', 'r', 'p'};
-    for (int i=0; i<6; i++) {
-        textures_[piece_letters[i]] = sf::Texture("/home/tom/Documents/code/schach/assets/spritesheet.jpg", true, sf::IntRect(sf::Vector2i(0, 45*i), piece_size));
-        textures_[toupper(piece_letters[i])] = sf::Texture("/home/tom/Documents/code/schach/assets/spritesheet.jpg", true, sf::IntRect(sf::Vector2i(45, 45*i), piece_size));
-    }
+    textures_['p'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-pawn.png");
+    textures_['b'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-bishop.png");
+    textures_['n'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-knight.png");
+    textures_['r'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-rook.png");
+    textures_['q'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-queen.png");
+    textures_['k'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-king.png");
+    textures_['P'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-pawn.png");
+    textures_['B'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-bishop.png");
+    textures_['N'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-knight.png");
+    textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
+    textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
+    textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
 }
 
 
 void Board::load_fen(std::string s) {
-    int row = 0;
-    int collumn = 7;
+    unsigned short row = 0;
+    unsigned short collumn = 7;
     for (char c : s) {
         if (c == ' ') {break;}
         else if (c == '/') {
@@ -47,8 +53,7 @@ void Board::set_piece_positions() {
     for (const auto& [coordinates, piece] : pieces_) {
         float x = (static_cast<int>(coordinates.row) - 'A') * square_length_;
         float y = coordinates.collumn * square_length_;
-        std::cout << "X: " << x << "   " << "Y:" << y << std::endl;
-        piece->set_position(PixelCoordinates{x, y});
+        piece->set_position(sf::Vector2f{x, y});
     }
 }
 
@@ -95,7 +100,6 @@ void Board::draw_pieces_() {
     for (const auto&  [coordinates, piece] : pieces_) {
         // std::cout << "Hi" << std::endl;
         piece->draw(window_);
-        break;
     }
 }
 

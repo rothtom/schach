@@ -6,12 +6,12 @@
 
 class Piece {
     public:
-        explicit Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f& piece_scale);
+        explicit Piece(sf::Texture texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         void draw(float& tile_size, sf::Sprite& sprite);
         virtual std::vector<ChessCoordinates> possible_moves() = 0;
         virtual ~Piece() = default;
         void draw(sf::RenderWindow& window);
-        void set_position(PixelCoordinates oordinates);
+        void set_position(sf::Vector2f coordinates);
 
     protected:
         sf::Sprite sprite_;

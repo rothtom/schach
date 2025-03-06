@@ -1,15 +1,16 @@
 #include <Pieces.hpp>
 #include <iostream>
 
-Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f& piece_scale) :
+Piece::Piece(sf::Texture texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
     sprite_(texture), color_(color), type_(type), coordinates_(coordinates)
 {
-    sprite_.setScale(piece_scale);
-    sprite_.setColor(sf::Color::Black);
+    sprite_.setTexture(texture);
+    sprite_.setScale({piece_scale});
+    // sprite_.setColor(sf::Color::Black);
 };
 
-void Piece::set_position(PixelCoordinates coordinates) {
-    sprite_.setPosition({coordinates.x, coordinates.y});
+void Piece::set_position(sf::Vector2f coordinates) {
+    sprite_.setPosition(coordinates);
 }
 
 void Piece::draw(sf::RenderWindow& window) {
