@@ -110,9 +110,9 @@ bool Board::check_piece_clicked(sf::Vector2i& mousepos) {
     for (auto& [coordinates, piece] : pieces_) {
         if (piece->check_clicked(mousepos)) {
             for (auto& [coordinates, piece2] : pieces_) {
-                piece2->disselect();
+                if (piece != piece2) {piece2->disselect();}
             }
-            piece->select();
+            !piece->selected_ ? piece->select() : piece->disselect();
             return true;
         }
     }

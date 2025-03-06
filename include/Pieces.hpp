@@ -13,6 +13,8 @@ class Piece {
         void draw(sf::RenderWindow& window);
         void set_position(sf::Vector2f coordinates);
         bool check_clicked(sf::Vector2i& mousepos);
+
+        bool selected_ = false;
         void select();
         void disselect();
 
@@ -21,7 +23,7 @@ class Piece {
         colors color_;
         types type_;
         ChessCoordinates coordinates_;
-        bool selected_ = false;
+        
 };
 
 class Pawn : public Piece {
