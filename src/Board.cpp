@@ -5,7 +5,7 @@
 
 Board::Board(sf::RenderWindow& window) : window_(window) {
     square_length_ = std::min(window_.getSize().x, window_.getSize().y) / 8;
-    float piece_scale = square_length_ / 45;
+    float piece_scale = square_length_ / 480;
     piece_scale_ = {piece_scale, piece_scale};
     tile_ = sf::RectangleShape(sf::Vector2f(square_length_, square_length_));
     set_textures();
@@ -26,6 +26,9 @@ void Board::set_textures() {
     textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
     textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
     textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
+    for (auto& [c, texture] : textures_) {
+        texture.setSmooth(true);
+    }
 }
 
 
