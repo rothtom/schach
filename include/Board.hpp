@@ -1,18 +1,31 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <map>
+#include <memory>
+#include <array>
 
 #include "colors.hpp"
 #include "Coordinates.hpp"
+#include "Pieces.hpp"
 
 class Board {
     public:
         Board(sf::RenderWindow& window);
         void draw();
+        void set_textures();
+        void load_fen(std::string s);
 
     private:
         sf::RenderWindow& window_;
         float square_length_;
         sf::RectangleShape tile_;
+;
+        std::map<char, sf::Texture> textures_;
+        
+        std::unique_ptr<Piece> create_piece(char type_char, const ChessCoordinates& coordinates);
+        std::map<ChessCoordinates, std::unique_ptr<Piece>> pieces_;
+        
         void draw_tiles_();
+      
 };

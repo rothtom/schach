@@ -1,7 +1,13 @@
 #pragma once 
 
-
-struct Coordinates {
+struct PiexelCoordinates {
     int x;
     int y;
-}; // Coordinates
+}; // PiexelCoordinates
+
+struct ChessCoordinates {
+    char row;
+    unsigned short collumn;
+}; // ChessCoordinates
+
+bool operator<(const ChessCoordinates& l, const ChessCoordinates& r);
