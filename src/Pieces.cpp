@@ -17,6 +17,26 @@ void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite_);
 }
 
+bool Piece::check_clicked(sf::Vector2i& mousepos) {
+    if (sprite_.getGlobalBounds().contains({mousepos.x, mousepos.y})) {
+        return true;
+    }
+    return false;
+}
+
+void Piece::select() {
+    color_ == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
+    selected_ = true;
+}
+
+void Piece::disselect() {
+    if (selected_) {
+        color_ == WHITE ? sprite_.move({0, -10}) : sprite_.move({0, 10});
+    }
+    selected_ = false;
+}
+
+
 Pawn::Pawn(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
     Piece(texture, color, PAWN, coordinates, piece_scale)
 {};

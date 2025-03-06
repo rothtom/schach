@@ -16,6 +16,11 @@ int main() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
+            else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                std::cout << "Mouse used!" << std::endl;
+                sf::Vector2i mousepos = sf::Mouse::getPosition();
+                board.check_piece_clicked(mousepos);
+            }
         }
         
         window.clear(sf::Color(0, 0, 0));

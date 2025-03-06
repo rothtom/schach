@@ -14,18 +14,18 @@ Board::Board(sf::RenderWindow& window) : window_(window) {
 };
 
 void Board::set_textures() {
-    textures_['p'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-pawn.png");
-    textures_['b'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-bishop.png");
-    textures_['n'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-knight.png");
-    textures_['r'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-rook.png");
-    textures_['q'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-queen.png");
-    textures_['k'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-king.png");
-    textures_['P'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-pawn.png");
-    textures_['B'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-bishop.png");
-    textures_['N'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-knight.png");
-    textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
-    textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
-    textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
+    textures_['p'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-pawn.png");
+    textures_['b'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-bishop.png");
+    textures_['n'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-knight.png");
+    textures_['r'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
+    textures_['q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
+    textures_['k'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
+    textures_['P'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-pawn.png");
+    textures_['B'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-bishop.png");
+    textures_['N'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-knight.png");
+    textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-rook.png");
+    textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-queen.png");
+    textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-king.png");
     for (auto& [c, texture] : textures_) {
         texture.setSmooth(true);
     }
@@ -93,7 +93,7 @@ void Board::draw_tiles_() {
     for (int i=0; i<8; i++) {
         for (int j=0; j<8; j++) {
             tile_.setPosition(sf::Vector2f(square_length_*i, square_length_*j));
-            (i + j) % 2 == 0 ? tile_.setFillColor(sf::Color(78, 120, 55)) : tile_.setFillColor(sf::Color(255, 255, 255));
+            (i + j) % 2 == 1 ? tile_.setFillColor(sf::Color(78, 120, 55)) : tile_.setFillColor(sf::Color(255, 255, 255));
             window_.draw(tile_);
         }
     }
@@ -104,5 +104,18 @@ void Board::draw_pieces_() {
         // std::cout << "Hi" << std::endl;
         piece->draw(window_);
     }
+}
+
+bool Board::check_piece_clicked(sf::Vector2i& mousepos) {
+    for (auto& [coordinates, piece] : pieces_) {
+        if (piece->check_clicked(mousepos)) {
+            for (auto& [coordinates, piece2] : pieces_) {
+                piece2->disselect();
+            }
+            piece->select();
+            return true;
+        }
+    }
+    return false;
 }
 

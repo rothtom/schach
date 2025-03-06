@@ -12,12 +12,16 @@ class Piece {
         virtual ~Piece() = default;
         void draw(sf::RenderWindow& window);
         void set_position(sf::Vector2f coordinates);
+        bool check_clicked(sf::Vector2i& mousepos);
+        void select();
+        void disselect();
 
     protected:
         sf::Sprite sprite_;
         colors color_;
         types type_;
         ChessCoordinates coordinates_;
+        bool selected_ = false;
 };
 
 class Pawn : public Piece {
