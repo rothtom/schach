@@ -1,8 +1,8 @@
 #pragma once 
 
-struct PiexelCoordinates {
-    int x;
-    int y;
+struct PixelCoordinates {
+    float x;
+    float y;
 }; // PiexelCoordinates
 
 struct ChessCoordinates {

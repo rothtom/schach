@@ -6,10 +6,12 @@
 
 class Piece {
     public:
-        explicit Piece(sf::Texture texture, colors color, types type, ChessCoordinates coordinates);
+        explicit Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f& piece_scale);
         void draw(float& tile_size, sf::Sprite& sprite);
         virtual std::vector<ChessCoordinates> possible_moves() = 0;
         virtual ~Piece() = default;
+        void draw(sf::RenderWindow& window);
+        void set_position(PixelCoordinates oordinates);
 
     protected:
         sf::Sprite sprite_;
@@ -20,42 +22,36 @@ class Piece {
 
 class Pawn : public Piece {
     public:
-        explicit Pawn(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit Pawn(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~Pawn() override = default;
 };
 
 class Bishop : public Piece {
     public:
-        explicit Bishop(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit Bishop(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~Bishop() override = default;
 };
 
 class Knight : public Piece {
     public:
-        explicit Knight(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit Knight(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~Knight() override = default;
 };
 
 class Rook : public Piece {
     public:
-        explicit Rook(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit Rook(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~Rook() override = default;
 };
 
 class Queen : public Piece {
     public:
-        explicit Queen(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit Queen(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~Queen() override = default;
 };
 
 class King : public Piece {
     public:
-        explicit King(sf::Texture texture, colors color, ChessCoordinates coordinates);
+        explicit King(sf::Texture texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale);
         std::vector<ChessCoordinates> possible_moves() override;
-        ~King() override = default;
 };
