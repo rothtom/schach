@@ -25,6 +25,7 @@ class Piece {
         sf::CircleShape possible_move_marker_;
         types type_;
         ChessCoordinates coordinates_;
+        sf::Vector2f piece_scale_;
         
 };
 

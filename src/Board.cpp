@@ -8,9 +8,9 @@ Board::Board(sf::RenderWindow& window) : window_(window) {
     float piece_scale = square_length_ / 480;
     piece_scale_ = {piece_scale, piece_scale};
     tile_ = sf::RectangleShape(sf::Vector2f(square_length_, square_length_));
-    possible_move_marker_ = sf::CircleShape(10);
+    possible_move_marker_ = sf::CircleShape(480 * 0.4 / 2);
     set_textures();
-    load_fen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+    load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq e3 0 1");
     set_piece_positions();
 };
 

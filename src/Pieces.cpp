@@ -2,11 +2,11 @@
 #include <iostream>
 
 Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
-    sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker)
+    sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker), piece_scale_(piece_scale)
 {
-    std::cout << "Piece: " << color << "  " << type << std::endl;
-    std::cout << "Collumn: " << coordinates.collumn << "  Row: " << coordinates.row << std::endl;
-    
+    possible_move_marker_.setScale(piece_scale);
+    float radius = possible_move_marker_.getLocalBounds().size.x / 2;
+    possible_move_marker_.setOrigin({radius, radius});
     sprite_.setTexture(texture);
     sprite_.setScale(piece_scale);
     // sprite_.setColor(sf::Color::Black);
@@ -19,11 +19,12 @@ void Piece::set_position(sf::Vector2f coordinates) {
 void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite_);
     if (selected) {
-        // float square_length = sprite_.getLocalBounds().size.x;
-        float square_length = 45;
+        float square_length = 480 * piece_scale_.x;
+        // float square_length = 45;
         for (ChessCoordinates possible_move : possible_moves()) {
             std::cout << "Collumn: " << possible_move.collumn << std::endl << "Row: " << possible_move.row << std::endl;
-            possible_move_marker_.setPosition(chess_cord_to_abs_pos(possible_move, square_length, window.getSize()));
+            sf::Vector2f square_pos = chess_cord_to_abs_pos(possible_move, square_length, window.getSize());
+            possible_move_marker_.setPosition({square_pos.x + square_length / 2, square_pos.y + square_length / 2});
             possible_move_marker_.setFillColor(sf::Color::Magenta);
             window.draw(possible_move_marker_);
         }
