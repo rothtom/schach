@@ -1,5 +1,6 @@
 add_library(Board Board.cpp)
 add_library(Pieces Pieces.cpp)
+add_library(helpers helpers.cpp)
 
 add_library(Coordinates Coordinates.cpp)
 
@@ -9,6 +10,7 @@ target_link_libraries(main PRIVATE
                     Board
                     Pieces
                     Coordinates
+                    helpers
                     SFML::Window
                     SFML::Graphics
                     SFML::Audio

@@ -7,6 +7,7 @@
 
 #include "colors.hpp"
 #include "Coordinates.hpp"
+#include "helpers.hpp"
 #include "Pieces.hpp"
 
 class Board {

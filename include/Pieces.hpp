@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
 
-#include <Coordinates.hpp>
-#include <colors.hpp>
-#include <types.hpp>
+#include "Coordinates.hpp"
+#include "colors.hpp"
+#include "types.hpp"
+#include "helpers.hpp"
 
 class Piece {
     public:

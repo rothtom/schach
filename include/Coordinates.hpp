@@ -6,8 +6,8 @@ struct PixelCoordinates {
 }; // PiexelCoordinates
 
 struct ChessCoordinates {
-    char row;
-    unsigned short collumn;
+    unsigned short row;
+    char collumn;
 }; // ChessCoordinates
 
 bool operator<(const ChessCoordinates& l, const ChessCoordinates& r);

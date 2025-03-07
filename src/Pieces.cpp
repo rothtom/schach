@@ -63,7 +63,24 @@ King::King(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf:
 
 
 std::vector<ChessCoordinates> Pawn::possible_moves() {
-   
+    std::vector<ChessCoordinates> possible_moves;
+    possible_moves.resize(2);
+    if (color == WHITE) {
+        ChessCoordinates coordinates{coordinates_.collumn, coordinates_.row + 1};
+        possible_moves.emplace_back(coordinates);
+        if (coordinates_.row == 2) {
+            coordinates.row++;
+            possible_moves.emplace_back(coordinates);
+        }
+        return possible_moves;
+    }
+    ChessCoordinates coordinates{coordinates_.collumn, coordinates_.row - 1};
+        possible_moves.emplace_back(coordinates);
+        if (coordinates_.row == 7) {
+            coordinates.row--;
+            possible_moves.emplace_back(coordinates);
+        }
+        return possible_moves;
 }
 
 std::vector<ChessCoordinates> Bishop::possible_moves() {
