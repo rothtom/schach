@@ -14,13 +14,14 @@ class Piece {
         void set_position(sf::Vector2f coordinates);
         bool check_clicked(sf::Vector2i& mousepos);
 
-        bool selected_ = false;
+        bool selected = false;
+        colors color;
         void select();
         void disselect();
 
     protected:
         sf::Sprite sprite_;
-        colors color_;
+        
         types type_;
         ChessCoordinates coordinates_;
         

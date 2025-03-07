@@ -26,6 +26,8 @@ class Board {
         sf::Vector2f piece_scale_;
         sf::RectangleShape tile_;
 
+        colors next_move = WHITE;
+
         std::map<char, sf::Texture> textures_;
         
         std::unique_ptr<Piece> create_piece(char type_char, const ChessCoordinates& coordinates);

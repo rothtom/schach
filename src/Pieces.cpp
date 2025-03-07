@@ -2,7 +2,7 @@
 #include <iostream>
 
 Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    sprite_(texture), color_(color), type_(type), coordinates_(coordinates)
+    sprite_(texture), color(color), type_(type), coordinates_(coordinates)
 {
     sprite_.setTexture(texture);
     sprite_.setScale(piece_scale);
@@ -25,15 +25,15 @@ bool Piece::check_clicked(sf::Vector2i& mousepos) {
 }
 
 void Piece::select() {
-    color_ == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
-    selected_ = true;
+    color == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
+    selected = true;
 }
 
 void Piece::disselect() {
-    if (selected_) {
-        color_ == WHITE ? sprite_.move({0, -10}) : sprite_.move({0, 10});
+    if (selected) {
+        color == WHITE ? sprite_.move({0, -10}) : sprite_.move({0, 10});
     }
-    selected_ = false;
+    selected = false;
 }
 
 

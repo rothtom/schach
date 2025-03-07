@@ -108,11 +108,12 @@ void Board::draw_pieces_() {
 
 bool Board::check_piece_clicked(sf::Vector2i& mousepos) {
     for (auto& [coordinates, piece] : pieces_) {
-        if (piece->check_clicked(mousepos)) {
+        if (piece->color == next_move) {continue;}
+        else if (piece->check_clicked(mousepos)) {
             for (auto& [coordinates, piece2] : pieces_) {
                 if (piece != piece2) {piece2->disselect();}
             }
-            !piece->selected_ ? piece->select() : piece->disselect();
+            !piece->selected ? piece->select() : piece->disselect();
             return true;
         }
     }
