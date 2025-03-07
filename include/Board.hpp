@@ -26,6 +26,7 @@ class Board {
         float square_length_;
         sf::Vector2f piece_scale_;
         sf::RectangleShape tile_;
+        sf::CircleShape possible_move_marker_;
 
         colors next_move = WHITE;
 

@@ -1,7 +1,11 @@
 #pragma once
 
 #include <array>
+#include <iostream>
+#include <SFML/Window.hpp>
 
 #include "Coordinates.hpp"
 
-std::array<unsigned short, 2> chess_cord_to_index(ChessCoordinates chess);
+sf::Vector2u chess_cord_to_index(const ChessCoordinates& chess);
+
+sf::Vector2f chess_cord_to_abs_pos(const ChessCoordinates& chess, const float& square_lenght, const sf::Vector2u& window_size);

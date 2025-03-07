@@ -1,9 +1,12 @@
 #include <Pieces.hpp>
 #include <iostream>
 
-Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    sprite_(texture), color(color), type_(type), coordinates_(coordinates)
+Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker)
 {
+    std::cout << "Piece: " << color << "  " << type << std::endl;
+    std::cout << "Collumn: " << coordinates.collumn << "  Row: " << coordinates.row << std::endl;
+    
     sprite_.setTexture(texture);
     sprite_.setScale(piece_scale);
     // sprite_.setColor(sf::Color::Black);
@@ -15,6 +18,16 @@ void Piece::set_position(sf::Vector2f coordinates) {
 
 void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite_);
+    if (selected) {
+        // float square_length = sprite_.getLocalBounds().size.x;
+        float square_length = 45;
+        for (ChessCoordinates possible_move : possible_moves()) {
+            std::cout << "Collumn: " << possible_move.collumn << std::endl << "Row: " << possible_move.row << std::endl;
+            possible_move_marker_.setPosition(chess_cord_to_abs_pos(possible_move, square_length, window.getSize()));
+            possible_move_marker_.setFillColor(sf::Color::Magenta);
+            window.draw(possible_move_marker_);
+        }
+    }
 }
 
 bool Piece::check_clicked(sf::Vector2i& mousepos) {
@@ -25,62 +38,63 @@ bool Piece::check_clicked(sf::Vector2i& mousepos) {
 }
 
 void Piece::select() {
-    color == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
+    color == WHITE ? sprite_.move({0, -10}) : sprite_.move({0, 10});
     selected = true;
 }
 
 void Piece::disselect() {
     if (selected) {
-        color == WHITE ? sprite_.move({0, -10}) : sprite_.move({0, 10});
+        color == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
     }
     selected = false;
 }
 
 
-Pawn::Pawn(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, PAWN, coordinates, piece_scale)
+Pawn::Pawn(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, PAWN, coordinates, piece_scale, possible_move_marker)
 {};
 
-Bishop::Bishop(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, BISHOP, coordinates, piece_scale)
+Bishop::Bishop(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, BISHOP, coordinates, piece_scale, possible_move_marker)
 {};
 
-Knight::Knight(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, KNIGHT, coordinates, piece_scale)
+Knight::Knight(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, KNIGHT, coordinates, piece_scale, possible_move_marker)
 {};
 
-Rook::Rook(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, ROOK, coordinates, piece_scale)
+Rook::Rook(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, ROOK, coordinates, piece_scale, possible_move_marker)
 {};
 
-Queen::Queen(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, QUEEN, coordinates, piece_scale)
+Queen::Queen(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, QUEEN, coordinates, piece_scale, possible_move_marker)
 {};
 
-King::King(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale) :
-    Piece(texture, color, KING, coordinates, piece_scale)
+King::King(sf::Texture& texture, colors color, ChessCoordinates coordinates, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker) :
+    Piece(texture, color, KING, coordinates, piece_scale, possible_move_marker)
 {};
 
 
 std::vector<ChessCoordinates> Pawn::possible_moves() {
     std::vector<ChessCoordinates> possible_moves;
-    possible_moves.resize(2);
     if (color == WHITE) {
-        ChessCoordinates coordinates{coordinates_.collumn, coordinates_.row + 1};
+        std::cout << "row before: " << coordinates_.row << std::endl;
+        ChessCoordinates coordinates{coordinates_.row + 1, coordinates_.collumn};
         possible_moves.emplace_back(coordinates);
         if (coordinates_.row == 2) {
             coordinates.row++;
             possible_moves.emplace_back(coordinates);
         }
-        return possible_moves;
     }
-    ChessCoordinates coordinates{coordinates_.collumn, coordinates_.row - 1};
+    else {
+        ChessCoordinates coordinates{coordinates_.row - 1, coordinates_.collumn};
         possible_moves.emplace_back(coordinates);
         if (coordinates_.row == 7) {
             coordinates.row--;
             possible_moves.emplace_back(coordinates);
         }
-        return possible_moves;
+    }
+    return possible_moves;
 }
 
 std::vector<ChessCoordinates> Bishop::possible_moves() {

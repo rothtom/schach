@@ -8,24 +8,25 @@ Board::Board(sf::RenderWindow& window) : window_(window) {
     float piece_scale = square_length_ / 480;
     piece_scale_ = {piece_scale, piece_scale};
     tile_ = sf::RectangleShape(sf::Vector2f(square_length_, square_length_));
+    possible_move_marker_ = sf::CircleShape(10);
     set_textures();
-    load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    load_fen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
     set_piece_positions();
 };
 
 void Board::set_textures() {
-    textures_['p'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-pawn.png");
-    textures_['b'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-bishop.png");
-    textures_['n'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-knight.png");
-    textures_['r'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
-    textures_['q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
-    textures_['k'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
-    textures_['P'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-pawn.png");
-    textures_['B'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-bishop.png");
-    textures_['N'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-knight.png");
-    textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-rook.png");
-    textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-queen.png");
-    textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-king.png");
+    textures_['p'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-pawn.png");
+    textures_['b'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-bishop.png");
+    textures_['n'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-knight.png");
+    textures_['r'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-rook.png");
+    textures_['q'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-queen.png");
+    textures_['k'] = sf::Texture("/home/tom/Documents/code/schach/assets/b-king.png");
+    textures_['P'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-pawn.png");
+    textures_['B'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-bishop.png");
+    textures_['N'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-knight.png");
+    textures_['R'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-rook.png");
+    textures_['Q'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-queen.png");
+    textures_['K'] = sf::Texture("/home/tom/Documents/code/schach/assets/w-king.png");
     for (auto& [c, texture] : textures_) {
         texture.setSmooth(true);
     }
@@ -33,30 +34,28 @@ void Board::set_textures() {
 
 
 void Board::load_fen(std::string s) {
-    unsigned short row = 0;
-    unsigned short collumn = 7;
+    unsigned short collumn = 'A';
+    unsigned short row = 8;
     for (char c : s) {
         if (c == ' ') {break;}
         else if (c == '/') {
-            row = 0;
-            collumn--;
+            collumn = 'A';
+            row--;
         }
         else if (c >= '1' && c <= '8') {
-            row += c - '0';
+            collumn = collumn + c - '0';
         }
         else {
-            ChessCoordinates coordinates{static_cast<char>(row + 'A'), collumn};
+            ChessCoordinates coordinates{row, collumn};
             pieces_[coordinates] = create_piece(c, coordinates);
-            row++;
+            collumn++;
         }
     }
 }
 
 void Board::set_piece_positions() {
     for (const auto& [coordinates, piece] : pieces_) {
-        float x = (static_cast<int>(coordinates.row) - 'A') * square_length_;
-        float y = coordinates.collumn * square_length_;
-        piece->set_position(sf::Vector2f{x, y});
+        piece->set_position(chess_cord_to_abs_pos(coordinates, square_length_, window_.getSize()));
     }
 }
 
@@ -65,17 +64,17 @@ std::unique_ptr<Piece> Board::create_piece(char type_char, const ChessCoordinate
     std::isupper(type_char) ? color = colors::WHITE : color = colors::BLACK;
     switch(std::tolower(type_char)) {
         case('p'):
-            return std::make_unique<Pawn>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<Pawn>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         case('b'):
-            return std::make_unique<Bishop>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<Bishop>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         case('n'):
-            return std::make_unique<Knight>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<Knight>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         case('r'):
-            return std::make_unique<Rook>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<Rook>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         case('q'):
-            return std::make_unique<Queen>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<Queen>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         case('k'):
-            return std::make_unique<King>(textures_[type_char], color, coordinates, piece_scale_);
+            return std::make_unique<King>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
         default:
             return nullptr;
     }
@@ -108,7 +107,7 @@ void Board::draw_pieces_() {
 
 bool Board::check_piece_clicked(sf::Vector2i& mousepos) {
     for (auto& [coordinates, piece] : pieces_) {
-        if (piece->color == next_move) {continue;}
+        if (piece->color != next_move) {continue;}
         else if (piece->check_clicked(mousepos)) {
             for (auto& [coordinates, piece2] : pieces_) {
                 if (piece != piece2) {piece2->disselect();}
