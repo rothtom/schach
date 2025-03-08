@@ -64,17 +64,17 @@ std::unique_ptr<Piece> Board::create_piece(char type_char, const ChessCoordinate
     std::isupper(type_char) ? color = colors::WHITE : color = colors::BLACK;
     switch(std::tolower(type_char)) {
         case('p'):
-            return std::make_unique<Pawn>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<Pawn>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('b'):
-            return std::make_unique<Bishop>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<Bishop>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('n'):
-            return std::make_unique<Knight>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<Knight>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('r'):
-            return std::make_unique<Rook>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<Rook>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('q'):
-            return std::make_unique<Queen>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<Queen>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('k'):
-            return std::make_unique<King>(textures_[type_char], color, coordinates, piece_scale_, possible_move_marker_);
+            return std::make_unique<King>(textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         default:
             return nullptr;
     }
