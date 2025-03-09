@@ -48,6 +48,8 @@ void Board::load_fen(std::string s) {
         else {
             ChessCoordinates coordinates{row, collumn};
             pieces_[coordinates] = create_piece(c, coordinates);
+            // check for possible moves once at start, then handeled after move making
+            pieces_[coordinates]->possible_moves();
             collumn++;
         }
     }
@@ -55,7 +57,7 @@ void Board::load_fen(std::string s) {
 
 void Board::set_piece_positions() {
     for (const auto& [coordinates, piece] : pieces_) {
-        piece->set_position(chess_cord_to_abs_pos(coordinates, square_length_, window_.getSize()));
+        piece->set_position();
     }
 }
 
@@ -105,17 +107,17 @@ void Board::draw_pieces_() {
     }
 }
 
-bool Board::check_piece_clicked(sf::Vector2i& mousepos) {
+void Board::check_piece_clicked(sf::Vector2i& mousepos) {
+    bool moved = false;
     for (auto& [coordinates, piece] : pieces_) {
         if (piece->color != next_move) {continue;}
-        else if (piece->check_clicked(mousepos)) {
-            for (auto& [coordinates, piece2] : pieces_) {
-                if (piece != piece2) {piece2->disselect();}
-            }
-            !piece->selected ? piece->select() : piece->disselect();
-            return true;
+        else {
+            piece->check_clicked(mousepos, moved);
+            if (moved) {break;}
         }
     }
-    return false;
+    if (moved) {
+        next_move == WHITE ? next_move = BLACK : next_move = WHITE;
+    }
 }
 

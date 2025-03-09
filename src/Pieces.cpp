@@ -4,16 +4,18 @@
 Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates,float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
     sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker), piece_scale_(piece_scale), square_length_(square_length), window_(window)
 {
-    float radius = possible_move_marker_.getLocalBounds().size.x / 2;
-    possible_move_marker_.setOrigin({radius, radius});
+    possible_move_marker_.setOrigin({possible_move_marker_.getRadius(), possible_move_marker_.getRadius()});
     possible_move_marker_.setFillColor(sf::Color(75, 72, 71, 80));
     sprite_.setTexture(texture);
     sprite_.setScale(piece_scale);
+    possible_moves_ = std::vector<PossibleMoveField>{};
+    pixel_coordinates_ = chess_cord_to_abs_pos(coordinates_, square_length_, window_.getSize());
     // sprite_.setColor(sf::Color::Black);
 };
 
-void Piece::set_position(sf::Vector2f coordinates) {
-    sprite_.setPosition(coordinates);
+void Piece::set_position() {
+    pixel_coordinates_ = chess_cord_to_abs_pos(coordinates_, square_length_, window_.getSize());
+    sprite_.setPosition(pixel_coordinates_);
 }
 
 void Piece::draw(sf::RenderWindow& window) {
@@ -29,17 +31,23 @@ void Piece::draw(sf::RenderWindow& window) {
             window.draw(possible_move_marker_);
         }
         */
-        for (PossibleMoveField possible_move : possible_moves()) {
+        for (PossibleMoveField possible_move : possible_moves_) {
             possible_move.draw();
         }
     }
 }
 
-bool Piece::check_clicked(sf::Vector2i& mousepos) {
+void Piece::check_clicked(sf::Vector2i& mousepos, bool& moved) {
     if (sprite_.getGlobalBounds().contains({mousepos.x, mousepos.y})) {
-        return true;
+        selected ? disselect() : select();
     }
-    return false;
+    for (PossibleMoveField possible_move : possible_moves_) {
+        if (possible_move.check_clicked(mousepos)) {
+            selected ? disselect() : select();
+            move(possible_move.chess_coordinates);
+            moved = true;
+        }
+    }
 }
 
 void Piece::select() {
@@ -52,6 +60,12 @@ void Piece::disselect() {
         color == WHITE ? sprite_.move({0, 10}) : sprite_.move({0, -10});
     }
     selected = false;
+}
+
+void Piece::move(ChessCoordinates new_coordinates) {
+    coordinates_ = new_coordinates;
+    set_position();
+    possible_moves();
 }
 
 
@@ -80,44 +94,43 @@ King::King(sf::Texture& texture, colors color, ChessCoordinates coordinates, flo
 {};
 
 
-std::vector<PossibleMoveField> Pawn::possible_moves() {
-    std::vector<PossibleMoveField> possible_move_fields;
+void Pawn::possible_moves() {
+    possible_moves_.clear();
     ChessCoordinates coordinates;
     if (color == WHITE) {
         coordinates = {static_cast<unsigned short>(coordinates_.row + 1), coordinates_.collumn};
-        possible_move_fields.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+        possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
         if (coordinates_.row == 2) {
             coordinates.row++;
-            possible_move_fields.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
         }
     }
     else {
         ChessCoordinates coordinates{coordinates_.row - 1, coordinates_.collumn};
-        possible_move_fields.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+        possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
         if (coordinates_.row == 7) {
             coordinates.row--;
-            possible_move_fields.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
         }
     }
-    return possible_move_fields;
 }
 
-std::vector<PossibleMoveField> Bishop::possible_moves() {
-
-}
-
-std::vector<PossibleMoveField> Knight::possible_moves() {
+void Bishop::possible_moves() {
 
 }
 
-std::vector<PossibleMoveField> Rook::possible_moves() {
+void Knight::possible_moves() {
 
 }
 
-std::vector<PossibleMoveField> Queen::possible_moves() {
+void Rook::possible_moves() {
 
 }
 
-std::vector<PossibleMoveField> King::possible_moves() {
+void Queen::possible_moves() {
+
+}
+
+void King::possible_moves() {
 
 }

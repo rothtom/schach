@@ -19,7 +19,7 @@ class Board {
 
         
 
-        bool check_piece_clicked(sf::Vector2i& mousepos);
+        void check_piece_clicked(sf::Vector2i& mousepos);
 
     private:
         sf::RenderWindow& window_;
