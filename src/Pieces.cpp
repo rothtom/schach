@@ -22,16 +22,6 @@ void Piece::set_position() {
 void Piece::draw(sf::RenderWindow& window) {
     window.draw(sprite_);
     if (selected) {
-        // float square_length = 45;
-        /*
-        for (ChessCoordinates possible_move : possible_moves()) {
-            std::cout << "Collumn: " << possible_move.collumn << std::endl << "Row: " << possible_move.row << std::endl;
-            sf::Vector2f square_pos = chess_cord_to_abs_pos(possible_move, square_length, window.getSize());
-            possible_move_marker_.setPosition({square_pos.x + square_length / 2, square_pos.y + square_length / 2});
-            possible_move_marker_.setFillColor(sf::Color::Magenta);
-            window.draw(possible_move_marker_);
-        }
-        */
         for (PossibleMoveField possible_move : possible_moves_) {
             possible_move.draw();
         }
@@ -68,31 +58,6 @@ void Piece::move(ChessCoordinates new_coordinates) {
     set_position();
     possible_moves();
 }
-
-
-Pawn::Pawn(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, PAWN, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
-
-Bishop::Bishop(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, BISHOP, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
-
-Knight::Knight(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, KNIGHT, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
-
-Rook::Rook(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, ROOK, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
-
-Queen::Queen(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, QUEEN, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
-
-King::King(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(pieces, texture, color, KING, coordinates, square_length, piece_scale, possible_move_marker, window)
-{};
 
 
 void Pawn::possible_moves() {
@@ -135,3 +100,27 @@ void Queen::possible_moves() {
 void King::possible_moves() {
 
 }
+
+Pawn::Pawn(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, PAWN, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
+
+Bishop::Bishop(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, BISHOP, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
+
+Knight::Knight(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, KNIGHT, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
+
+Rook::Rook(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, ROOK, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
+
+Queen::Queen(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, QUEEN, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
+
+King::King(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(pieces, texture, color, KING, coordinates, square_length, piece_scale, possible_move_marker, window)
+{};
