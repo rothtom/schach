@@ -7,9 +7,11 @@
 #include "helpers.hpp"
 #include "PossibleMoveField.hpp"
 
+class Board;
+
 class Piece {
     public:
-        explicit Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Piece(Board& board, sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         virtual void possible_moves() = 0;
         void draw(sf::RenderWindow& window);
         void set_position();
@@ -22,6 +24,7 @@ class Piece {
         void disselect();
 
     protected:
+        Board& board_;
         sf::Sprite sprite_;
         sf::CircleShape possible_move_marker_;
         types type_;
@@ -36,36 +39,36 @@ class Piece {
 
 class Pawn : public Piece {
     public:
-        explicit Pawn(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Pawn(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Bishop : public Piece {
     public:
-        explicit Bishop(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Bishop(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Knight : public Piece {
     public:
-        explicit Knight(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Knight(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Rook : public Piece {
     public:
-        explicit Rook(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Rook(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Queen : public Piece {
     public:
-        explicit Queen(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Queen(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class King : public Piece {
     public:
-        explicit King(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit King(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };

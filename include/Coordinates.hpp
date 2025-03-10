@@ -11,3 +11,4 @@ struct ChessCoordinates {
 }; // ChessCoordinates
 
 bool operator<(const ChessCoordinates& l, const ChessCoordinates& r);
+

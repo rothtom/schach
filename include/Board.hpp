@@ -16,10 +16,9 @@ class Board {
         void draw();
         void set_textures();
         void load_fen(std::string s);
-
-        
-
         void check_piece_clicked(sf::Vector2i& mousepos);
+
+        const std::map<ChessCoordinates, std::unique_ptr<Piece>>& pieces() const {return pieces_;}
 
     private:
         sf::RenderWindow& window_;

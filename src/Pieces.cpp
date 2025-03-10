@@ -1,8 +1,9 @@
-#include <Pieces.hpp>
+#include "Pieces.hpp"
 #include <iostream>
 
-Piece::Piece(sf::Texture& texture, colors color, types type, ChessCoordinates coordinates,float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker), piece_scale_(piece_scale), square_length_(square_length), window_(window)
+
+Piece::Piece(Board& board, sf::Texture& texture, colors color, types type, ChessCoordinates coordinates,float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    board_(board), sprite_(texture), color(color), type_(type), coordinates_(coordinates), possible_move_marker_(possible_move_marker), piece_scale_(piece_scale), square_length_(square_length), window_(window)
 {
     possible_move_marker_.setOrigin({possible_move_marker_.getRadius(), possible_move_marker_.getRadius()});
     possible_move_marker_.setFillColor(sf::Color(75, 72, 71, 80));
@@ -69,28 +70,28 @@ void Piece::move(ChessCoordinates new_coordinates) {
 }
 
 
-Pawn::Pawn(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, PAWN, coordinates, square_length, piece_scale, possible_move_marker, window)
+Pawn::Pawn(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, PAWN, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
-Bishop::Bishop(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, BISHOP, coordinates, square_length, piece_scale, possible_move_marker, window)
+Bishop::Bishop(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, BISHOP, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
-Knight::Knight(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, KNIGHT, coordinates, square_length, piece_scale, possible_move_marker, window)
+Knight::Knight(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, KNIGHT, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
-Rook::Rook(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, ROOK, coordinates, square_length, piece_scale, possible_move_marker, window)
+Rook::Rook(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, ROOK, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
-Queen::Queen(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, QUEEN, coordinates, square_length, piece_scale, possible_move_marker, window)
+Queen::Queen(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, QUEEN, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
-King::King(sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
-    Piece(texture, color, KING, coordinates, square_length, piece_scale, possible_move_marker, window)
+King::King(Board& board, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window) :
+    Piece(board, texture, color, KING, coordinates, square_length, piece_scale, possible_move_marker, window)
 {};
 
 
