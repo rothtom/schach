@@ -59,25 +59,53 @@ void Piece::move(ChessCoordinates new_coordinates) {
     possible_moves();
 }
 
+void Piece::take(ChessCoordinates coordinates) {
+    // TODO, difficult because cant keep reference to board
+}
+
 
 void Pawn::possible_moves() {
     possible_moves_.clear();
     ChessCoordinates coordinates;
     if (color == WHITE) {
         coordinates = {static_cast<unsigned short>(coordinates_.row + 1), coordinates_.collumn};
-        possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
-        if (coordinates_.row == 2) {
-            coordinates.row++;
-            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+        try {
+            if (pieces_.at(coordinates)->color != WHITE) {
+                possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                coordinates.row++;
+                if (coordinates_.row == 2 && pieces_.at(coordinates)->color != WHITE) {
+                    possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                }
+            }
         }
+        catch (std::out_of_range) {
+            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+            if (coordinates_.row == 2) {
+                coordinates.row++;
+                possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+            }
+        }
+        
     }
     else {
         ChessCoordinates coordinates{coordinates_.row - 1, coordinates_.collumn};
-        possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
-        if (coordinates_.row == 7) {
-            coordinates.row--;
-            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+        try {
+            if (pieces_.at(coordinates)->color != BLACK) {
+                possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                coordinates.row--;
+                if (coordinates_.row == 7 && pieces_.at(coordinates)->color != BLACK) {
+                    possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                }
+            }
         }
+        catch (std::out_of_range) {
+            possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                if (coordinates_.row == 7) {
+                    coordinates.row--;
+                    possible_moves_.emplace_back(PossibleMoveField(coordinates, square_length_, window_, possible_move_marker_));
+                }
+        }
+        
     }
 }
 

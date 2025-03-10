@@ -19,6 +19,7 @@ class Piece {
         void set_position();
         void check_clicked(sf::Vector2i& mousepos, bool& moved);
         void move(ChessCoordinates new_coordinates);
+        void take(ChessCoordinates coordinates);
 
         bool selected = false;
         colors color;
