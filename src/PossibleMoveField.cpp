@@ -14,7 +14,6 @@ void PossibleMoveField::draw() {
 
 bool PossibleMoveField::check_clicked(sf::Vector2i& mousepos) {
     if (circle_.getGlobalBounds().contains({mousepos.x, mousepos.y})) {
-        std::cout << "Hit!" << std::endl;
         return true;
     }
     return false;

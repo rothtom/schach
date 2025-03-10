@@ -61,22 +61,22 @@ void Board::set_piece_positions() {
     }
 }
 
-std::unique_ptr<Piece> Board::create_piece(char type_char, const ChessCoordinates& coordinates) {
+std::shared_ptr<Piece> Board::create_piece(char type_char, const ChessCoordinates& coordinates) {
     colors color;
     std::isupper(type_char) ? color = colors::WHITE : color = colors::BLACK;
     switch(std::tolower(type_char)) {
         case('p'):
-            return std::make_unique<Pawn>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Pawn>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('b'):
-            return std::make_unique<Bishop>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Bishop>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('n'):
-            return std::make_unique<Knight>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Knight>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('r'):
-            return std::make_unique<Rook>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Rook>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('q'):
-            return std::make_unique<Queen>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Queen>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('k'):
-            return std::make_unique<King>(*this, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<King>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         default:
             return nullptr;
     }
