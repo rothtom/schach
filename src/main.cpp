@@ -19,7 +19,7 @@ int main() {
             else if (event->is<sf::Event::MouseButtonPressed>()) {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
                     sf::Vector2i mousepos = sf::Mouse::getPosition(window);
-                    board.check_piece_clicked(mousepos);
+                    board.check_piece_selected(mousepos);
                 }
             }
         }

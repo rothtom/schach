@@ -15,7 +15,8 @@ class Piece {
     public:
         explicit Piece(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         virtual void possible_moves() = 0;
-        void draw(sf::RenderWindow& window);
+        void draw_piece();
+        void draw_possible_moves();
         void set_position();
         void check_clicked(sf::Vector2i& mousepos, bool& moved);
         void move(ChessCoordinates new_coordinates);

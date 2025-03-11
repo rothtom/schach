@@ -19,13 +19,16 @@ void Piece::set_position() {
     sprite_.setPosition(pixel_coordinates_);
 }
 
-void Piece::draw(sf::RenderWindow& window) {
-    window.draw(sprite_);
-    if (selected) {
-        for (PossibleMoveField possible_move : possible_moves_) {
-            possible_move.draw();
-        }
+void Piece::draw_piece() {
+    window_.draw(sprite_);
+}
+
+void Piece::draw_possible_moves() {
+    
+    for (PossibleMoveField possible_move : possible_moves_) {
+        possible_move.draw();
     }
+    
 }
 
 void Piece::check_clicked(sf::Vector2i& mousepos, bool& moved) {

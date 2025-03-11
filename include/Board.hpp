@@ -16,7 +16,7 @@ class Board {
         void draw();
         void set_textures();
         void load_fen(std::string s);
-        void check_piece_clicked(sf::Vector2i& mousepos);
+        void check_piece_selected(sf::Vector2i& mousepos);
 
         const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces() const {return pieces_;}
 
@@ -28,6 +28,7 @@ class Board {
         sf::CircleShape possible_move_marker_;
 
         colors next_move = WHITE;
+        std::shared_ptr<Piece> selected_piece_ = nullptr;
 
         std::map<char, sf::Texture> textures_;
         

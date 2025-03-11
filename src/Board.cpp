@@ -103,21 +103,20 @@ void Board::draw_tiles_() {
 void Board::draw_pieces_() {
     for (const auto&  [coordinates, piece] : pieces_) {
         // std::cout << "Hi" << std::endl;
-        piece->draw(window_);
+        piece->draw_piece();
+    }
+    if (selected_piece_ != nullptr) {
+        selected_piece_->draw_possible_moves();
     }
 }
 
-void Board::check_piece_clicked(sf::Vector2i& mousepos) {
+void Board::check_piece_selected(sf::Vector2i& mousepos) {
     bool moved = false;
     for (auto& [coordinates, piece] : pieces_) {
         if (piece->color != next_move) {continue;}
         else {
             piece->check_clicked(mousepos, moved);
-            if (moved) {break;}
         }
-    }
-    if (moved) {
-        next_move == WHITE ? next_move = BLACK : next_move = WHITE;
     }
 }
 
