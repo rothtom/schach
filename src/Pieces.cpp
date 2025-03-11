@@ -32,11 +32,13 @@ void Piece::check_clicked(sf::Vector2i& mousepos, bool& moved) {
     if (sprite_.getGlobalBounds().contains({mousepos.x, mousepos.y})) {
         selected ? disselect() : select();
     }
-    for (PossibleMoveField possible_move : possible_moves_) {
-        if (possible_move.check_clicked(mousepos)) {
-            selected ? disselect() : select();
-            move(possible_move.chess_coordinates);
-            moved = true;
+    if (selected) {
+        for (PossibleMoveField possible_move : possible_moves_) {
+            if (possible_move.check_clicked(mousepos)) {
+                selected ? disselect() : select();
+                move(possible_move.chess_coordinates);
+                moved = true;
+            }
         }
     }
 }
