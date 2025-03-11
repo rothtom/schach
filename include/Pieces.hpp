@@ -8,19 +8,20 @@
 #include "types.hpp"
 #include "helpers.hpp"
 #include "PossibleMoveField.hpp"
+#include "Tile.hpp"
 
 class Board;
 
 class Piece {
     public:
-        explicit Piece(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Piece(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles_, sf::Texture& texture, colors color, types type, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         virtual void possible_moves() = 0;
+        void draw();
         void draw_piece();
         void draw_possible_moves();
         void set_position();
         void check_clicked(sf::Vector2i& mousepos, bool& moved);
         void move(ChessCoordinates new_coordinates);
-        void take(ChessCoordinates coordinates);
 
         bool selected = false;
         colors color;
@@ -28,7 +29,7 @@ class Piece {
         void disselect();
 
     protected:
-        const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_;
+        const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles_;
         sf::Sprite sprite_;
         sf::CircleShape possible_move_marker_;
         types type_;
@@ -43,36 +44,36 @@ class Piece {
 
 class Pawn : public Piece {
     public:
-        explicit Pawn(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Pawn(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Bishop : public Piece {
     public:
-        explicit Bishop(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Bishop(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Knight : public Piece {
     public:
-        explicit Knight(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Knight(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Rook : public Piece {
     public:
-        explicit Rook(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Rook(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class Queen : public Piece {
     public:
-        explicit Queen(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit Queen(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };
 
 class King : public Piece {
     public:
-        explicit King(const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces_, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
+        explicit King(const std::map<ChessCoordinates, std::shared_ptr<Tile>>& tiles, sf::Texture& texture, colors color, ChessCoordinates coordinates, float square_length, sf::Vector2f piece_scale, sf::CircleShape& possible_move_marker, sf::RenderWindow& window);
         void possible_moves() override;
 };

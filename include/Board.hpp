@@ -9,6 +9,7 @@
 #include "Coordinates.hpp"
 #include "helpers.hpp"
 #include "Pieces.hpp"
+#include "Tile.hpp"
 
 class Board {
     public:
@@ -18,7 +19,7 @@ class Board {
         void load_fen(std::string s);
         void check_piece_selected(sf::Vector2i& mousepos);
 
-        const std::map<ChessCoordinates, std::shared_ptr<Piece>>& pieces() const {return pieces_;}
+        const std::map<ChessCoordinates, std::shared_ptr<Tile>>& pieces() const {return tiles_;}
 
     private:
         sf::RenderWindow& window_;
@@ -33,7 +34,7 @@ class Board {
         std::map<char, sf::Texture> textures_;
         
         std::shared_ptr<Piece> create_piece(char type_char, const ChessCoordinates& coordinates);
-        std::map<ChessCoordinates, std::shared_ptr<Piece>> pieces_;
+        std::map<ChessCoordinates, std::shared_ptr<Tile>> tiles_;
 
         void set_piece_positions();
         

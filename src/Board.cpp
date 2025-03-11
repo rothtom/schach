@@ -47,17 +47,17 @@ void Board::load_fen(std::string s) {
         }
         else {
             ChessCoordinates coordinates{row, collumn};
-            pieces_[coordinates] = create_piece(c, coordinates);
+            tiles_[coordinates] = std::make_shared<Tile>(create_piece(c, coordinates));
             // check for possible moves once at start, then handeled after move making
-            pieces_[coordinates]->possible_moves();
+            tiles_[coordinates]->piece->possible_moves();
             collumn++;
         }
     }
 }
 
 void Board::set_piece_positions() {
-    for (const auto& [coordinates, piece] : pieces_) {
-        piece->set_position();
+    for (const auto& [coordinates, tile] : tiles_) {
+        tile->piece->set_position();
     }
 }
 
@@ -66,17 +66,17 @@ std::shared_ptr<Piece> Board::create_piece(char type_char, const ChessCoordinate
     std::isupper(type_char) ? color = colors::WHITE : color = colors::BLACK;
     switch(std::tolower(type_char)) {
         case('p'):
-            return std::make_shared<Pawn>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Pawn>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('b'):
-            return std::make_shared<Bishop>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Bishop>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('n'):
-            return std::make_shared<Knight>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Knight>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('r'):
-            return std::make_shared<Rook>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Rook>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('q'):
-            return std::make_shared<Queen>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<Queen>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         case('k'):
-            return std::make_shared<King>(pieces_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
+            return std::make_shared<King>(tiles_, textures_[type_char], color, coordinates, square_length_, piece_scale_, possible_move_marker_, window_);
         default:
             return nullptr;
     }
@@ -101,9 +101,9 @@ void Board::draw_tiles_() {
 }
 
 void Board::draw_pieces_() {
-    for (const auto&  [coordinates, piece] : pieces_) {
+    for (const auto&  [coordinates, tile] : tiles_) {
         // std::cout << "Hi" << std::endl;
-        piece->draw_piece();
+        tile->piece->draw_piece();
     }
     if (selected_piece_ != nullptr) {
         selected_piece_->draw_possible_moves();
@@ -112,10 +112,10 @@ void Board::draw_pieces_() {
 
 void Board::check_piece_selected(sf::Vector2i& mousepos) {
     bool moved = false;
-    for (auto& [coordinates, piece] : pieces_) {
-        if (piece->color != next_move) {continue;}
+    for (auto& [coordinates, tile] : tiles_) {
+        if (tile->piece->color != next_move) {continue;}
         else {
-            piece->check_clicked(mousepos, moved);
+            tile->piece->check_clicked(mousepos, moved);
         }
     }
 }
