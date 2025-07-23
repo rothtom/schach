@@ -9,10 +9,14 @@ void chess::Piece::resize(int tile_width) {
     sprite_scale_ = static_cast<float>(tile_width_) / sprite_.getTexture().getSize().x;
     sprite_.setScale({sprite_scale_, sprite_scale_});
 
-    std::cout << "Texture size: " << sprite_.getTexture().getSize().x << "Sprite scale: " << sprite_.getScale().x << std::endl;
+    std::cout << "Tile width: " << tile_width_ << " Texture size: " << sprite_.getTexture().getSize().x << " Sprite scale: " << sprite_.getScale().x << std::endl;
 }
 
 void chess::Piece::draw() {
+    std::cout << "Tile width: " << tile_width_ << " Texture size: " << sprite_.getTexture().getSize().x << " Sprite scale: " << sprite_.getScale().x << std::endl;
+    resize(62);
+    std::cout << "Tile width: " << tile_width_ << " Texture size: " << sprite_.getTexture().getSize().x << " Sprite scale: " << sprite_.getScale().x << std::endl;
+    update();
     window_.draw(sprite_);
 }
 

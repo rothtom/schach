@@ -14,12 +14,13 @@ namespace chess {
             void draw();
             void update();
             void resize(int tile_width);
+            virtual ~Piece() = default;
         protected:
             chess::color color_;
             ChessCoordinates coordinates_;
             sf::Vector2i position_;
             std::vector<ChessCoordinates> possible_moves();
-            sf::Texture texture_;
+            sf::Texture& texture_;
             sf::Sprite sprite_;
             float sprite_scale_;
             int tile_width_;

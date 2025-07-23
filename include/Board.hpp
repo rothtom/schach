@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <string>
 #include <map>
+#include <memory>
 
 #include "Piece.hpp"
 #include "King.hpp"
@@ -41,7 +42,7 @@ namespace chess {
             int window_height_;
             int board_width_;
             int tile_width_;
-            std::vector<Piece> pieces_;
+            std::vector<std::unique_ptr<Piece>> pieces_;
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
             std::map<std::string, sf::Texture> textures_;

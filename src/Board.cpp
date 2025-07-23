@@ -12,9 +12,9 @@ chess::Board::Board(sf::RenderWindow& window)
 
     resize();
 
-    for (chess::Piece piece : pieces_) {
-        piece.resize(tile_width_);
-    }
+    /* for (chess::Piece piece : pieces_) {
+        piece.update();
+    } */
 }
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
@@ -45,41 +45,41 @@ void chess::Board::load_fen(std::string fen_string) {
             std::cout << "Adding Piece" << std::endl;
             // black pieces -> lower case letters
             if (c == 'k') {
-               pieces_.emplace_back(King(BLACK, {collumn, row}, textures_["b-king"], window_));
+               pieces_.emplace_back(std::make_unique<King>(BLACK, {collumn, row}, textures_["b-king"], window_));
             }
             else if (c == 'q') {
-                pieces_.emplace_back(Queen(BLACK, {collumn, row}, textures_["b-queen"], window_));
+                pieces_.emplace_back(std::make_unique<Queen>(BLACK, {collumn, row}, textures_["b-queen"], window_));
             }
             else if (c == 'r') {
-                pieces_.emplace_back(Rook(BLACK, {collumn, row}, textures_["b-rook"], window_));
+                pieces_.emplace_back(std::make_unique<Rook>(BLACK, {collumn, row}, textures_["b-rook"], window_));
             }
             else if (c == 'b') {
-                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, textures_["b-bishop"], window_));
+                pieces_.emplace_back(std::make_unique<Bishop>(BLACK, {collumn, row}, textures_["b-bishop"], window_));
             }
             else if (c == 'n') {
-                pieces_.emplace_back(Knight(BLACK, {collumn, row}, textures_["b-knight"], window_));
+                pieces_.emplace_back(std::make_unique<Knight>(BLACK, {collumn, row}, textures_["b-knight"], window_));
             }
             else if (c == 'p') {
-                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, textures_["b-pawn"], window_));
+                pieces_.emplace_back(std::make_unique<Paen>(BLACK, {collumn, row}, textures_["b-pawn"], window_));
             }
 
             else if (c == 'k') {
-               pieces_.emplace_back(King(BLACK, {collumn, row}, textures_["w-king"], window_));
+               pieces_.emplace_back(std::make_unique<King>(WHITE, {collumn, row}, textures_["w-king"], window_));
             }
             else if (c == 'q') {
-                pieces_.emplace_back(Queen(BLACK, {collumn, row}, textures_["w-queen"], window_));
+                pieces_.emplace_back(std::make_unique<Queen>(WHITE, {collumn, row}, textures_["w-queen"], window_));
             }
             else if (c == 'r') {
-                pieces_.emplace_back(Rook(BLACK, {collumn, row}, textures_["w-rook"], window_));
+                pieces_.emplace_back(std::make_unique<Rook>(WHITE, {collumn, row}, textures_["w-rook"], window_));
             }
             else if (c == 'b') {
-                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, textures_["w-bishop"], window_));
+                pieces_.emplace_back(std::make_unique<Bishop>(WHITE, {collumn, row}, textures_["w-bishop"], window_));
             }
             else if (c == 'n') {
-                pieces_.emplace_back(Knight(BLACK, {collumn, row}, textures_["w-knight"], window_));
+                pieces_.emplace_back(std::make_unique<Knight>(WHITE, {collumn, row}, textures_["w-knight"], window_));
             }
             else if (c == 'p') {
-                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, textures_["w-pawn"], window_));
+                pieces_.emplace_back(std::make_unique<Pawn>(WHITE, {collumn, row}, textures_["w-pawn"], window_));
             }
             else {
                 std::cout << c << std::endl;
@@ -154,9 +154,9 @@ void chess::Board::draw_tiles() {
 }
 
 void chess::Board::draw_pieces() {
-    for (chess::Piece piece : pieces_) {
-        piece.draw();
-    }
+    /* for (Piece piece : pieces_) {
+        piece->draw();
+    } */
 }
 
 void chess::Board::resize() {
@@ -168,6 +168,10 @@ void chess::Board::resize() {
     white_tile_.setSize({static_cast<float>(tile_width_), static_cast<float>(tile_width_)});
     sf::View view(sf::FloatRect({0, 0}, {static_cast<float>(window_width_), static_cast<float>(window_height_)}));
     window_.setView(view);
+
+    /* for (chess::Piece piece : pieces_) {
+        piece.resize(tile_width_);
+    } */
 }
 
 
