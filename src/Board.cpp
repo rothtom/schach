@@ -1,16 +1,20 @@
 #include "Board.hpp"
 
 chess::Board::Board(sf::RenderWindow& window) 
-: window_(window), 
-window_width_(window.getSize().x), window_height_(window.getSize().y), 
-board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8),
-white_tile_(sf::Vector2f({static_cast<float>(tile_width_), static_cast<float>(tile_width_)}))
+: window_(window)
 {
+    textures_ = load_textures();
     pieces_.reserve(32);
     white_tile_.setFillColor(sf::Color(240, 217, 181));
     black_tile_.setFillColor(sf::Color(181, 136, 99));
 
     load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+    resize();
+
+    for (chess::Piece piece : pieces_) {
+        piece.resize(tile_width_);
+    }
 }
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
@@ -28,52 +32,57 @@ void chess::Board::load_fen(std::string fen_string) {
     unsigned short row = 8;
     char collumn = 'a';
     int i = 0;
-    while (char c = fen_string[i] != ' ') {
+    char c;
+    while ((c = fen_string[i]) != ' ') {
         if (std::isdigit(c)) {
-            collumn += int(c) - int('0');
             std::cout << "Collumn: " << collumn << std::endl;
         }
         else if (c == '/') {
             row--;
+            collumn = 'a';
         }
         else {
+            std::cout << "Adding Piece" << std::endl;
             // black pieces -> lower case letters
             if (c == 'k') {
-               pieces_.emplace_back(King(BLACK, {collumn, row}, load_texture("assets/b-king.png")));
+               pieces_.emplace_back(King(BLACK, {collumn, row}, textures_["b-king"], window_));
             }
             else if (c == 'q') {
-                pieces_.emplace_back(Queen(BLACK, {collumn, row}, load_texture("assets/b-queen.png")));
+                pieces_.emplace_back(Queen(BLACK, {collumn, row}, textures_["b-queen"], window_));
             }
             else if (c == 'r') {
-                pieces_.emplace_back(Rook(BLACK, {collumn, row}, load_texture("assets/b-rook.png")));
+                pieces_.emplace_back(Rook(BLACK, {collumn, row}, textures_["b-rook"], window_));
             }
             else if (c == 'b') {
-                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, load_texture("assets/b-bishop.png")));
+                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, textures_["b-bishop"], window_));
             }
             else if (c == 'n') {
-                pieces_.emplace_back(Knight(BLACK, {collumn, row}, load_texture("assets/b-knight.png")));
+                pieces_.emplace_back(Knight(BLACK, {collumn, row}, textures_["b-knight"], window_));
             }
             else if (c == 'p') {
-                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, load_texture("assets/b-pawn.png")));
+                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, textures_["b-pawn"], window_));
             }
 
-            else if (c == 'K') {
-               pieces_.emplace_back(King(BLACK, {collumn, row}, load_texture("assets/w-king.png")));
+            else if (c == 'k') {
+               pieces_.emplace_back(King(BLACK, {collumn, row}, textures_["w-king"], window_));
             }
-            else if (c == 'K') {
-                pieces_.emplace_back(Queen(BLACK, {collumn, row}, load_texture("assets/w-queen.png")));
+            else if (c == 'q') {
+                pieces_.emplace_back(Queen(BLACK, {collumn, row}, textures_["w-queen"], window_));
             }
-            else if (c == 'R') {
-                pieces_.emplace_back(Rook(BLACK, {collumn, row}, load_texture("assets/w-rook.png")));
+            else if (c == 'r') {
+                pieces_.emplace_back(Rook(BLACK, {collumn, row}, textures_["w-rook"], window_));
             }
-            else if (c == 'B') {
-                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, load_texture("assets/w-bishop.png")));
+            else if (c == 'b') {
+                pieces_.emplace_back(Bishop(BLACK, {collumn, row}, textures_["w-bishop"], window_));
             }
-            else if (c == 'N') {
-                pieces_.emplace_back(Knight(BLACK, {collumn, row}, load_texture("assets/w-knight.png")));
+            else if (c == 'n') {
+                pieces_.emplace_back(Knight(BLACK, {collumn, row}, textures_["w-knight"], window_));
             }
-            else if (c == 'P') {
-                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, load_texture("assets/w-pawn.png")));
+            else if (c == 'p') {
+                pieces_.emplace_back(Pawn(BLACK, {collumn, row}, textures_["w-pawn"], window_));
+            }
+            else {
+                std::cout << c << std::endl;
             }
         } 
         i++;
@@ -82,7 +91,7 @@ void chess::Board::load_fen(std::string fen_string) {
     fen_string[i] == 'w' ? next_player = WHITE : next_player = BLACK;
     i++;
 
-    while (char c = fen_string[i] != ' ') {
+    while ((c = fen_string[i]) != ' ') {
         if (c == 'K') {
             rochade_rights.emplace_back(chess::K);
         }
@@ -115,7 +124,7 @@ void chess::Board::load_fen(std::string fen_string) {
     non_advancing_moves = std::stoi(non_advancing_moves_str);
 
     std::string move_num_str = "";
-    while (char c = fen_string[i] != ' ') {
+    while ((c = fen_string[i]) != ' ') {
         move_num_str += c;
         i++;
     }
@@ -123,6 +132,11 @@ void chess::Board::load_fen(std::string fen_string) {
 }
 
 void chess::Board::draw() {
+    draw_tiles();
+    draw_pieces();
+}
+
+void chess::Board::draw_tiles() {
     sf::Vector2f position;
     for (int i=0; i<8; i++) {
         for (int j=0; j<8; j++) {
@@ -136,6 +150,12 @@ void chess::Board::draw() {
                 window_.draw(white_tile_);
             }
         }
+    }
+}
+
+void chess::Board::draw_pieces() {
+    for (chess::Piece piece : pieces_) {
+        piece.draw();
     }
 }
 

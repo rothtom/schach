@@ -5,7 +5,7 @@
 namespace chess {
     class Rook: public Piece {
         public:
-            Rook(color piece_color, ChessCoordinates coordinates, sf::Texture texture);
+            Rook(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window);
         private:
             
     };

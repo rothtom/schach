@@ -10,9 +10,10 @@
 namespace chess {
     class Piece {
         public:
-            Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture texture);
+            Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window);
             void draw();
             void update();
+            void resize(int tile_width);
         protected:
             chess::color color_;
             ChessCoordinates coordinates_;
@@ -20,5 +21,8 @@ namespace chess {
             std::vector<ChessCoordinates> possible_moves();
             sf::Texture texture_;
             sf::Sprite sprite_;
+            float sprite_scale_;
+            int tile_width_;
+            sf::RenderWindow& window_;
     };
 } // chess

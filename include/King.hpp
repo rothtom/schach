@@ -3,7 +3,7 @@
 namespace chess {
     class King: public Piece {
         public:
-            King(color piece_color, ChessCoordinates coordinates, sf::Texture texture);
+            King(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window);
         private:
             
     };

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <string>
+#include <map>
 
 #include "Piece.hpp"
 #include "King.hpp"
@@ -21,6 +22,9 @@ namespace chess {
             
 
             void draw();
+            void draw_tiles();
+            void draw_pieces();
+
             void resize();
             void update();
             void load_fen(std::string fen_string);
@@ -40,7 +44,6 @@ namespace chess {
             std::vector<Piece> pieces_;
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
-            
-            
+            std::map<std::string, sf::Texture> textures_;
     };
 }
