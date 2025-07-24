@@ -35,7 +35,7 @@ namespace chess {
 
             unsigned short non_advancing_moves;
             int move_num;
-            color next_player;
+            color current_player;
             std::vector<rochade_types> rochade_rights;
             bool enpasseaint_possible;
         private:
@@ -48,5 +48,6 @@ namespace chess {
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
             std::map<std::string, sf::Texture> textures_;
+
     };
 }

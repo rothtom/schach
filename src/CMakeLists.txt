@@ -9,6 +9,7 @@ add_library(chess STATIC
             Pawn.cpp
             helpers.cpp
             ChessCoordinates.cpp
+            PossibleMoveMarker.cpp
 )
 
 add_executable(main main.cpp)

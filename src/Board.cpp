@@ -89,7 +89,7 @@ void chess::Board::update() {
         else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
             std::cout << "Mouse clicked at" << mouseButtonPressed->position.x << mouseButtonPressed->position.y << std::endl;
             for (auto& piece : pieces_) {
-                if (piece->is_clicked(mouseButtonPressed->position)) {
+                if (piece->is_clicked(mouseButtonPressed->position) && piece->get_color() == current_player) {
                     for(auto& other_pieces : pieces_) {
                         other_pieces->disselect();
                     }
@@ -174,7 +174,7 @@ void chess::Board::load_fen(std::string fen_string) {
 
     i++;
 
-    fen_string[i] == 'w' ? next_player = WHITE : next_player = BLACK;
+    fen_string[i] == 'w' ? current_player = WHITE : current_player = BLACK;
     i += 2;
 
     while ((c = fen_string[i]) != ' ') {

@@ -50,7 +50,7 @@ void chess::Piece::select() {
 void chess::Piece::disselect() {
     selected_ = false;
     std::cout << "Disselected" << std::endl;
-    possible_move_markers_ = {};
+    possible_move_markers_.clear();
 }
 
 void chess::Piece::update_position() {
