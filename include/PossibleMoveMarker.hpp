@@ -7,12 +7,15 @@ namespace chess {
     class PossibleMoveMarker {
         public:
             PossibleMoveMarker(ChessCoordinates coordinates, float& tile_width, sf::RenderWindow& window);
-            bool is_hovered(sf::Vector2i mouse_pos);
-            bool is_clicked(sf::Vector2i mouse_pos);
             
             void draw();
             void update_position();
+            float get_radius() const;
+            ChessCoordinates get_coordinates() const;
+            sf::Vector2f get_position() const;
             void resize(int new_tile_width);
+            bool is_hovered(sf::Vector2i& mouse_pos);
+            bool is_clicked(sf::Vector2i& mouse_pos);
         private:
             sf::RenderWindow& window_;
             ChessCoordinates coordinates_;

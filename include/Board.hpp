@@ -48,6 +48,7 @@ namespace chess {
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
             std::map<std::string, sf::Texture> textures_;
+            std::optional<std::reference_wrapper<Piece>> selected_piece_;
 
     };
 }

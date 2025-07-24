@@ -1,6 +1,7 @@
 #include "Board.hpp"
 
 #include <optional>
+#include <functional>
 
 chess::Board::Board(sf::RenderWindow& window) 
 : window_(window)
@@ -87,14 +88,31 @@ void chess::Board::update() {
             resize();
         }
         else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-            std::cout << "Mouse clicked at" << mouseButtonPressed->position.x << mouseButtonPressed->position.y << std::endl;
-            for (auto& piece : pieces_) {
-                if (piece->is_clicked(mouseButtonPressed->position) && piece->get_color() == current_player) {
-                    for(auto& other_pieces : pieces_) {
-                        other_pieces->disselect();
-                    }
-                    piece->select();
+            sf::Vector2i mouse_pos = mouseButtonPressed->position;
+            if (selected_piece_.has_value()) {
+                std::optional<ChessCoordinates> cords_to_move_to = selected_piece_->get().marker_clicked(mouse_pos);
+                if (cords_to_move_to.has_value()) {
+                    selected_piece_->get().move(*cords_to_move_to);
+                    selected_piece_->get().disselect();
+                    selected_piece_.reset();
                     break;
+                }
+            }
+
+            for (auto& piece : pieces_) {
+                if (piece->is_clicked(mouse_pos) && piece->get_color() == current_player) {
+                    if (piece->is_selected()) {
+                        piece->disselect();
+                        selected_piece_.reset();
+                    }
+                    else {
+                        for(auto& other_pieces : pieces_) {
+                            other_pieces->disselect();
+                        }
+                        piece->select();
+                        selected_piece_ = std::reference_wrapper<Piece>(*piece);
+                    }
+                    break;                    
                 };
             }
             

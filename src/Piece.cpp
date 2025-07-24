@@ -1,5 +1,7 @@
 #include "Piece.hpp"
 
+#include <optional>
+
 chess::Piece::Piece(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces) 
 : color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window), other_pieces_(other_pieces)
 {}
@@ -9,6 +11,10 @@ void chess::Piece::resize(int tile_width) {
     sprite_scale_ = tile_width_ / sprite_.getTexture().getSize().x;
     sprite_.setScale({sprite_scale_, sprite_scale_});
     update_position();
+
+    for (auto& marker : possible_move_markers_) {
+        marker.resize(tile_width);
+    }
 }
 
 void chess::Piece::draw() {
@@ -22,14 +28,14 @@ void chess::Piece::update() {
     
 }
 
-bool chess::Piece::is_clicked(sf::Vector2i mouse_pos) {
+bool chess::Piece::is_clicked(sf::Vector2i& mouse_pos) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) and is_hovered(mouse_pos)) {
         return true;
     }
     return false;
 }
 
-bool chess::Piece::is_hovered(sf::Vector2i mouse_pos) {
+bool chess::Piece::is_hovered(sf::Vector2i& mouse_pos) {
     if (mouse_pos.x > position_.x and mouse_pos.x < position_.x + tile_width_ and
         mouse_pos.y > position_.y and mouse_pos.y < position_.y + tile_width_) {
             return true;
@@ -37,25 +43,42 @@ bool chess::Piece::is_hovered(sf::Vector2i mouse_pos) {
     return false;
 }
 
+std::optional<chess::ChessCoordinates> chess::Piece::marker_clicked(sf::Vector2i& mouse_pos) {
+    for (auto& marker : possible_move_markers_) {
+        if (marker.is_clicked(mouse_pos)) {
+            return marker.get_coordinates();
+        }
+    }
+    return std::nullopt;
+}
+
+
 void chess::Piece::select() {
     selected_ = true;
-    std::cout << "Selected" << std::endl;
-    std::vector<ChessCoordinates> possible_fields;
+    std::vector<ChessCoordinates> possible_fields = get_possible_moves();
     possible_move_markers_.reserve(possible_fields.capacity());
     for (ChessCoordinates coordinate : possible_fields) {
         possible_move_markers_.emplace_back(PossibleMoveMarker(coordinate, tile_width_, window_));
     }
+    update_position();
 }
 
 void chess::Piece::disselect() {
     selected_ = false;
-    std::cout << "Disselected" << std::endl;
     possible_move_markers_.clear();
+    update_position();    
+}
+
+bool chess::Piece::is_selected() const {
+    return selected_;
 }
 
 void chess::Piece::update_position() {
     sf::Vector2i indexes = coordinates_.to_index();
     position_ = sf::Vector2f({tile_width_ * indexes.x, tile_width_ * 7 - tile_width_ * indexes.y});
+    if (selected_) {
+        position_.y -= tile_width_ * 0.15;
+    }
     sprite_.setPosition(position_);
 }
 
@@ -69,6 +92,8 @@ const chess::color& chess::Piece::get_color() const {
 
 void chess::Piece::move(ChessCoordinates new_coordinates) {
     coordinates_ = new_coordinates;
+    possible_move_markers_.clear();
+    disselect();
     update_position();
 }
 

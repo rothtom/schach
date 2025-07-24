@@ -12,18 +12,19 @@
 namespace chess {
     class Piece {
         public:
+            Piece();
             Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces);
             void draw();
             void update();
             void select();
             void disselect();
+            bool is_selected() const;
             void resize(int tile_width);
             void update_position();
-            bool is_hovered(sf::Vector2i mouse_pos);
-            bool is_clicked(sf::Vector2i mouse_pos);
+            bool is_hovered(sf::Vector2i& mouse_pos);
+            bool is_clicked(sf::Vector2i& mouse_pos);
 
-            std::optional<ChessCoordinates> marker_clicked(ChessCoordinates mouse_pos);
-            std::optional<ChessCoordinates> marker_hovered(ChessCoordinates mouse_pos);
+            std::optional<ChessCoordinates> marker_clicked(sf::Vector2i& mouse_pos);
             void move(ChessCoordinates new_coordinates);
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
