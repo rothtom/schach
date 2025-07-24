@@ -28,7 +28,6 @@ namespace chess {
 
             void resize();
             void update();
-
             std::map<std::unique_ptr<Piece>&, std::vector<ChessCoordinates>> all_possible_moves(color current_players_color);
             std::vector<ChessCoordinates> possible_moves(std::unique_ptr<Piece>& piece);
             void load_fen(std::string fen_string);

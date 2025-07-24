@@ -5,7 +5,8 @@
 namespace chess {
     class Bishop: public Piece {
         public:
-            Bishop(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window);
+            Bishop(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces);
+            std::vector<ChessCoordinates> get_possible_moves();
         private:
             
     };

@@ -3,7 +3,8 @@
 namespace chess {
     class King: public Piece {
         public:
-            King(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window);
+            King(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces);
+            std::vector<ChessCoordinates> get_possible_moves();
         private:
             
     };
