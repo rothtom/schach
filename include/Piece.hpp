@@ -14,6 +14,7 @@ namespace chess {
             void draw();
             void update();
             void resize(int tile_width);
+            void update_position();
             virtual ~Piece() = default;
         protected:
             chess::color color_;
@@ -23,7 +24,7 @@ namespace chess {
             sf::Texture& texture_;
             sf::Sprite sprite_;
             float sprite_scale_;
-            int tile_width_;
+            float tile_width_;
             sf::RenderWindow& window_;
     };
 } // chess

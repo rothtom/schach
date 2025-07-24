@@ -11,10 +11,6 @@ chess::Board::Board(sf::RenderWindow& window)
     load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     resize();
-
-    /* for (chess::Piece piece : pieces_) {
-        piece.update();
-    } */
 }
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
@@ -35,61 +31,62 @@ void chess::Board::load_fen(std::string fen_string) {
     char c;
     while ((c = fen_string[i]) != ' ') {
         if (std::isdigit(c)) {
-            std::cout << "Collumn: " << collumn << std::endl;
+            collumn += c - '0';
         }
         else if (c == '/') {
             row--;
             collumn = 'a';
         }
         else {
-            std::cout << "Adding Piece" << std::endl;
             // black pieces -> lower case letters
             if (c == 'k') {
-               pieces_.emplace_back(std::make_unique<King>(BLACK, {collumn, row}, textures_["b-king"], window_));
+               pieces_.emplace_back(std::make_unique<King>(BLACK, ChessCoordinates({collumn, row}), textures_["b-king"], window_));
             }
             else if (c == 'q') {
-                pieces_.emplace_back(std::make_unique<Queen>(BLACK, {collumn, row}, textures_["b-queen"], window_));
+                pieces_.emplace_back(std::make_unique<Queen>(BLACK, ChessCoordinates({collumn, row}), textures_["b-queen"], window_));
             }
             else if (c == 'r') {
-                pieces_.emplace_back(std::make_unique<Rook>(BLACK, {collumn, row}, textures_["b-rook"], window_));
+                pieces_.emplace_back(std::make_unique<Rook>(BLACK, ChessCoordinates({collumn, row}), textures_["b-rook"], window_));
             }
             else if (c == 'b') {
-                pieces_.emplace_back(std::make_unique<Bishop>(BLACK, {collumn, row}, textures_["b-bishop"], window_));
+                pieces_.emplace_back(std::make_unique<Bishop>(BLACK, ChessCoordinates({collumn, row}), textures_["b-bishop"], window_));
             }
             else if (c == 'n') {
-                pieces_.emplace_back(std::make_unique<Knight>(BLACK, {collumn, row}, textures_["b-knight"], window_));
+                pieces_.emplace_back(std::make_unique<Knight>(BLACK, ChessCoordinates({collumn, row}), textures_["b-knight"], window_));
             }
             else if (c == 'p') {
-                pieces_.emplace_back(std::make_unique<Paen>(BLACK, {collumn, row}, textures_["b-pawn"], window_));
+                pieces_.emplace_back(std::make_unique<Pawn>(BLACK, ChessCoordinates({collumn, row}), textures_["b-pawn"], window_));
             }
 
-            else if (c == 'k') {
-               pieces_.emplace_back(std::make_unique<King>(WHITE, {collumn, row}, textures_["w-king"], window_));
+            else if (c == 'K') {
+               pieces_.emplace_back(std::make_unique<King>(WHITE, ChessCoordinates({collumn, row}), textures_["w-king"], window_));
             }
-            else if (c == 'q') {
-                pieces_.emplace_back(std::make_unique<Queen>(WHITE, {collumn, row}, textures_["w-queen"], window_));
+            else if (c == 'Q') {
+                pieces_.emplace_back(std::make_unique<Queen>(WHITE, ChessCoordinates({collumn, row}), textures_["w-queen"], window_));
             }
-            else if (c == 'r') {
-                pieces_.emplace_back(std::make_unique<Rook>(WHITE, {collumn, row}, textures_["w-rook"], window_));
+            else if (c == 'R') {
+                pieces_.emplace_back(std::make_unique<Rook>(WHITE, ChessCoordinates({collumn, row}), textures_["w-rook"], window_));
             }
-            else if (c == 'b') {
-                pieces_.emplace_back(std::make_unique<Bishop>(WHITE, {collumn, row}, textures_["w-bishop"], window_));
+            else if (c == 'B') {
+                pieces_.emplace_back(std::make_unique<Bishop>(WHITE, ChessCoordinates({collumn, row}), textures_["w-bishop"], window_));
             }
-            else if (c == 'n') {
-                pieces_.emplace_back(std::make_unique<Knight>(WHITE, {collumn, row}, textures_["w-knight"], window_));
+            else if (c == 'N') {
+                pieces_.emplace_back(std::make_unique<Knight>(WHITE, ChessCoordinates({collumn, row}), textures_["w-knight"], window_));
             }
-            else if (c == 'p') {
-                pieces_.emplace_back(std::make_unique<Pawn>(WHITE, {collumn, row}, textures_["w-pawn"], window_));
+            else if (c == 'P') {
+                pieces_.emplace_back(std::make_unique<Pawn>(WHITE, ChessCoordinates({collumn, row}), textures_["w-pawn"], window_));
             }
-            else {
-                std::cout << c << std::endl;
-            }
+            else {}
+
+            collumn++;
         } 
         i++;
     }
 
-    fen_string[i] == 'w' ? next_player = WHITE : next_player = BLACK;
     i++;
+
+    fen_string[i] == 'w' ? next_player = WHITE : next_player = BLACK;
+    i += 2;
 
     while ((c = fen_string[i]) != ' ') {
         if (c == 'K') {
@@ -107,27 +104,29 @@ void chess::Board::load_fen(std::string fen_string) {
         i++;
     }
 
-    return;
+    i++;
 
-    enpasseaint_possible = fen_string[i] != '-';
-    enpasseaint_possible ? i += 2 : i++;
-
-    std::cout << i << std::endl;
+    enpasseaint_possible = (fen_string[i] != '-');
+    enpasseaint_possible ? i += 3 : i += 2;
+    std::cout << "Enpasseaint possible: " << enpasseaint_possible << std::endl;
 
     std::string non_advancing_moves_str = "";
-    while (char c = fen_string[i] != ' ') {
+    while ((c = fen_string[i]) != ' ') {
         non_advancing_moves_str += c;
         i++;
     }
-    std::cout << "non_advancing_moves_str: " << non_advancing_moves_str << std::endl;
+    i++;
 
+    std::cout << "non_advancing_moves_str: " << non_advancing_moves_str << "end" << std::endl;
     non_advancing_moves = std::stoi(non_advancing_moves_str);
 
     std::string move_num_str = "";
-    while ((c = fen_string[i]) != ' ') {
+    while ((c = fen_string[i]) != '\0') {
         move_num_str += c;
         i++;
     }
+    i++;
+    std::cout << "move_num_str: " << move_num_str << std::endl;
     move_num = std::stoi(move_num_str);
 }
 
@@ -139,14 +138,14 @@ void chess::Board::draw() {
 void chess::Board::draw_tiles() {
     sf::Vector2f position;
     for (int i=0; i<8; i++) {
-        for (int j=0; j<8; j++) {
-            position = {static_cast<float>(tile_width_ * i), static_cast<float>(tile_width_ * j)};
+        for (int j=0; j<9; j++) {
+            position = {tile_width_ * i, tile_width_ * j};
             if (((i + j) % 2) == 0) {
-                black_tile_.setPosition(position);
+                white_tile_.setPosition(position);
                 window_.draw(black_tile_);
             }
             else {
-                white_tile_.setPosition(position);
+                black_tile_.setPosition(position);
                 window_.draw(white_tile_);
             }
         }
@@ -154,9 +153,9 @@ void chess::Board::draw_tiles() {
 }
 
 void chess::Board::draw_pieces() {
-    /* for (Piece piece : pieces_) {
+    for (std::unique_ptr<Piece>& piece : pieces_) {
         piece->draw();
-    } */
+    }
 }
 
 void chess::Board::resize() {
@@ -169,9 +168,15 @@ void chess::Board::resize() {
     sf::View view(sf::FloatRect({0, 0}, {static_cast<float>(window_width_), static_cast<float>(window_height_)}));
     window_.setView(view);
 
-    /* for (chess::Piece piece : pieces_) {
-        piece.resize(tile_width_);
-    } */
+    for ( std::unique_ptr<Piece>& piece : pieces_) {
+        piece->resize(tile_width_);
+    }
+}
+
+void chess::Board::update() {
+    for (std::unique_ptr<Piece>& piece : pieces_) {
+        piece->update();
+    }
 }
 
 

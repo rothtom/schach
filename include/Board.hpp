@@ -28,6 +28,9 @@ namespace chess {
 
             void resize();
             void update();
+
+            std::map<std::unique_ptr<Piece>&, std::vector<ChessCoordinates>> all_possible_moves(color current_players_color);
+            std::vector<ChessCoordinates> possible_moves(std::unique_ptr<Piece>& piece);
             void load_fen(std::string fen_string);
             std::string board_to_fen();
 
@@ -40,8 +43,8 @@ namespace chess {
             sf::RenderWindow& window_;
             int window_width_;
             int window_height_;
-            int board_width_;
-            int tile_width_;
+            float board_width_;
+            float tile_width_;
             std::vector<std::unique_ptr<Piece>> pieces_;
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
