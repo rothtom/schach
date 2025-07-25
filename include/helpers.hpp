@@ -11,5 +11,6 @@ namespace chess {
     std::map<std::string, sf::Texture> load_textures();
     bool is_piece_at(const std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords);
     std::unique_ptr<Piece>& get_piece_at(std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords);
+    std::vector<std::unique_ptr<Piece>>::const_iterator get_piece_iterator_at(std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords);
 }
 

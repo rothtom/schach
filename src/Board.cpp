@@ -92,9 +92,12 @@ void chess::Board::update() {
             if (selected_piece_.has_value()) {
                 std::optional<ChessCoordinates> cords_to_move_to = selected_piece_->get().marker_clicked(mouse_pos);
                 if (cords_to_move_to.has_value()) {
+                    if (is_piece_at(pieces_, *cords_to_move_to)) {
+                        pieces_.erase(get_piece_iterator_at(pieces_, *cords_to_move_to));
+                    }
                     selected_piece_->get().move(*cords_to_move_to);
-                    selected_piece_->get().disselect();
                     selected_piece_.reset();
+                    current_player == BLACK ? current_player = WHITE : current_player = BLACK;
                     break;
                 }
             }

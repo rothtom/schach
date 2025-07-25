@@ -23,6 +23,14 @@ std::unique_ptr<chess::Piece>& chess::get_piece_at(std::vector<std::unique_ptr<c
     throw std::runtime_error("No piece found at given coordinates");
 }
 
+std::vector<std::unique_ptr<chess::Piece>>::const_iterator chess::get_piece_iterator_at(std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords) {
+    for (std::vector<std::unique_ptr<Piece>>::const_iterator it = pieces.begin(); it != pieces.end(); it++) {
+        if (it->get()->get_coordinates() == coords) {
+            return it;
+        }
+    }
+}
+
 
 sf::Texture chess::load_texture(std::string texture_path) {
        sf::Texture texture;
