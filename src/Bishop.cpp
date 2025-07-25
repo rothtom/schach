@@ -10,7 +10,7 @@ chess::Bishop::Bishop(chess::color piece_color, ChessCoordinates coordinates, sf
 std::vector<chess::ChessCoordinates> chess::Bishop::get_possible_moves() {
     std::vector<chess::ChessCoordinates> possible_moves;
     std::vector<std::pair<int, int>> directions = {
-        {-1, 1},
+        {1, -1},
         {1, 1},
         {-1, -1},
         {-1, 1},
