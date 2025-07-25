@@ -5,5 +5,36 @@ chess::Knight::Knight(chess::color piece_color, ChessCoordinates coordinates, sf
 {}
 
 std::vector<chess::ChessCoordinates> chess::Knight::get_possible_moves() {
-    
+    std::vector<chess::ChessCoordinates> possible_moves;
+    std::vector<std::pair<int, int>> directions = {
+        {-2, -1},
+        {-2, 1},
+        {1, -2},
+        {-1, -2},
+        {2, 1},
+        {2, -1},
+        {-1, 2},
+        {1, 2},
+    };
+    for (auto& [dcoll, drow] : directions) {
+        ChessCoordinates considered_cords = coordinates_;
+        considered_cords.coll += dcoll;
+        considered_cords.row += drow;
+
+        if (considered_cords.coll <  'a' or considered_cords.coll > 'h' 
+            or considered_cords.row > 8 or considered_cords.row < 1) {
+                continue;
+        }
+
+        if (chess::is_piece_at(other_pieces_, considered_cords)) {
+            if (chess::get_piece_at(other_pieces_, considered_cords)->get_color() != color_) {
+                possible_moves.emplace_back(considered_cords);
+            }
+            continue;
+        }
+        else {
+            possible_moves.emplace_back(considered_cords);
+        }
+    }
+    return possible_moves;
 }
