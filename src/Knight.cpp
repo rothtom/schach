@@ -1,7 +1,9 @@
 #include "Knight.hpp"
 
-chess::Knight::Knight(chess::color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces)
-: Piece(piece_color, coordinates, texture, window, other_pieces)
+#include "Board.hpp"
+
+chess::Knight::Knight(chess::color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board)
+: Piece(piece_color, coordinates, texture, window, board)
 {}
 
 std::vector<chess::ChessCoordinates> chess::Knight::get_possible_moves() {
@@ -26,8 +28,8 @@ std::vector<chess::ChessCoordinates> chess::Knight::get_possible_moves() {
                 continue;
         }
 
-        if (chess::is_piece_at(other_pieces_, considered_cords)) {
-            if (chess::get_piece_at(other_pieces_, considered_cords)->get_color() != color_) {
+        if (chess::is_piece_at(board_.get_pieces(), considered_cords)) {
+            if (chess::get_piece_at(board_.get_pieces(), considered_cords)->get_color() != color_) {
                 possible_moves.emplace_back(considered_cords);
             }
             continue;
@@ -37,4 +39,8 @@ std::vector<chess::ChessCoordinates> chess::Knight::get_possible_moves() {
         }
     }
     return possible_moves;
+}
+
+std::unique_ptr<chess::Piece> chess::Knight::deep_copy() {
+    return std::make_unique<Knight>(*this);
 }

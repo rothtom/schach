@@ -2,8 +2,8 @@
 
 #include <optional>
 
-chess::Piece::Piece(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces) 
-: color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window), other_pieces_(other_pieces)
+chess::Piece::Piece(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board) 
+: board_(board), color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window)
 {}
 
 void chess::Piece::resize(int tile_width) {

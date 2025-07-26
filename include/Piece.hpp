@@ -10,10 +10,11 @@
 #include "PossibleMoveMarker.hpp"
 
 namespace chess {
+    class Board;
     class Piece {
         public:
             Piece();
-            Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, std::vector<std::unique_ptr<Piece>>& other_pieces);
+            Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board);
             void draw();
             void update();
             void select();
@@ -29,8 +30,10 @@ namespace chess {
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
             virtual ~Piece() = default;
-            virtual std::vector<ChessCoordinates> get_possible_moves() = 0;
+            virtual std::unique_ptr<Piece> deep_copy();
+            virtual std::vector<ChessCoordinates> get_possible_moves();
         protected:
+            Board& board_;
             chess::color color_;
             ChessCoordinates coordinates_;
             sf::Vector2f position_;
@@ -40,7 +43,6 @@ namespace chess {
             float tile_width_;
             bool selected_;
             sf::RenderWindow& window_;
-            std::vector<std::unique_ptr<Piece>>& other_pieces_;
             std::vector<PossibleMoveMarker> possible_move_markers_;
     };
 } // chess

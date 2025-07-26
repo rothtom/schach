@@ -5,12 +5,6 @@
 #include <memory>
 
 #include "Piece.hpp"
-#include "King.hpp"
-#include "Queen.hpp"
-#include "Rook.hpp"
-#include "Bishop.hpp"
-#include "Knight.hpp"
-#include "Pawn.hpp"
 #include "colors.hpp"
 #include "rochade_types.hpp"
 #include "helpers.hpp"
@@ -38,6 +32,8 @@ namespace chess {
             color current_player;
             std::vector<rochade_types> rochade_rights;
             bool enpasseaint_possible;
+
+            const std::vector<std::unique_ptr<Piece>>& get_pieces();
         private:
             sf::RenderWindow& window_;
             int window_width_;

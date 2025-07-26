@@ -15,8 +15,8 @@ bool chess::is_piece_at(const std::vector<std::unique_ptr<chess::Piece>>& pieces
     return false;
 }
 
-std::unique_ptr<chess::Piece>& chess::get_piece_at(std::vector<std::unique_ptr<chess::Piece>>& pieces, chess::ChessCoordinates coords) {
-    for (std::unique_ptr<chess::Piece>& piece : pieces) {
+const std::unique_ptr<chess::Piece>& chess::get_piece_at(const std::vector<std::unique_ptr<chess::Piece>>& pieces, chess::ChessCoordinates coords) {
+    for (const std::unique_ptr<chess::Piece>& piece : pieces) {
         if (piece->get_coordinates() == coords) {
             return piece;
         }
@@ -24,8 +24,8 @@ std::unique_ptr<chess::Piece>& chess::get_piece_at(std::vector<std::unique_ptr<c
     throw std::runtime_error("No piece found at given coordinates");
 }
 
-std::unique_ptr<chess::Piece>& chess::get_king(std::vector<std::unique_ptr<Piece>>& pieces, chess::color kings_color) {
-    for (std::unique_ptr<Piece>& piece : pieces) {
+const std::unique_ptr<chess::Piece>& chess::get_king(const std::vector<std::unique_ptr<Piece>>& pieces, chess::color kings_color) {
+    for (const std::unique_ptr<Piece>& piece : pieces) {
         if (typeid(piece) == typeid(chess::King) && piece->get_color() == kings_color) {
             return piece;
         }
@@ -34,8 +34,8 @@ std::unique_ptr<chess::Piece>& chess::get_king(std::vector<std::unique_ptr<Piece
 }
 
 
-bool chess::is_in_check(std::vector<std::unique_ptr<chess::Piece>>& pieces, std::unique_ptr<chess::Piece>& king) {
-    for (std::unique_ptr<Piece>& piece : pieces) {
+bool chess::is_in_check(const std::vector<std::unique_ptr<chess::Piece>>& pieces, std::unique_ptr<chess::Piece>& king) {
+    for (const std::unique_ptr<Piece>& piece : pieces) {
         if (piece->get_color() == king->get_color()) {
             continue;
         }
@@ -45,11 +45,17 @@ bool chess::is_in_check(std::vector<std::unique_ptr<chess::Piece>>& pieces, std:
             }
         }
     }
+}
 
+void chess::deep_copy_board(const std::vector<std::unique_ptr<chess::Piece>>& old_board, std::vector<std::unique_ptr<chess::Piece>>& new_board) {
+    for (const std::unique_ptr<Piece>& piece : old_board) {
+        new_board.emplace_back(piece->deep_copy());
+    }
 }
 
 
-std::vector<std::unique_ptr<chess::Piece>>::const_iterator chess::get_piece_iterator_at(std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords) {
+
+std::vector<std::unique_ptr<chess::Piece>>::const_iterator chess::get_piece_iterator_at(const std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords) {
     for (std::vector<std::unique_ptr<Piece>>::const_iterator it = pieces.begin(); it != pieces.end(); it++) {
         if (it->get()->get_coordinates() == coords) {
             return it;
