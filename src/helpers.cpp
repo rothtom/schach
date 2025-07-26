@@ -2,6 +2,7 @@
 
 #include "helpers.hpp"
 #include "Piece.hpp"
+#include "King.hpp"
 
 
 
@@ -22,6 +23,31 @@ std::unique_ptr<chess::Piece>& chess::get_piece_at(std::vector<std::unique_ptr<c
     }
     throw std::runtime_error("No piece found at given coordinates");
 }
+
+std::unique_ptr<chess::Piece>& chess::get_king(std::vector<std::unique_ptr<Piece>>& pieces, chess::color kings_color) {
+    for (std::unique_ptr<Piece>& piece : pieces) {
+        if (typeid(piece) == typeid(chess::King) && piece->get_color() == kings_color) {
+            return piece;
+        }
+    }
+    kings_color == WHITE ? throw std::runtime_error("no white king found") : throw std::runtime_error("no black king found");
+}
+
+
+bool chess::is_in_check(std::vector<std::unique_ptr<chess::Piece>>& pieces, std::unique_ptr<chess::Piece>& king) {
+    for (std::unique_ptr<Piece>& piece : pieces) {
+        if (piece->get_color() == king->get_color()) {
+            continue;
+        }
+        for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
+            if (coordinates == king->get_coordinates()) {
+                return true;
+            }
+        }
+    }
+
+}
+
 
 std::vector<std::unique_ptr<chess::Piece>>::const_iterator chess::get_piece_iterator_at(std::vector<std::unique_ptr<Piece>>& pieces, ChessCoordinates coords) {
     for (std::vector<std::unique_ptr<Piece>>::const_iterator it = pieces.begin(); it != pieces.end(); it++) {

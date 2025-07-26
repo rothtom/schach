@@ -77,6 +77,7 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
         }
     }
 
+    
     return possible_moves;
 }
 

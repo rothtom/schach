@@ -147,8 +147,6 @@ void chess::Board::load_fen(std::string fen_string) {
         }
         else {
             // black pieces -> lower case letters
-            std::cout << "detected piece!" << std::endl;
-            std::cout << "Collumn: " << collumn << " Row: " << row << std::endl;
             if (c == 'k') {
                pieces_.emplace_back(std::make_unique<King>(BLACK, ChessCoordinates({collumn, row}), textures_["b-king"], window_, pieces_));
             }
