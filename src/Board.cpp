@@ -11,7 +11,9 @@
 #include <functional>
 
 chess::Board::Board(sf::RenderWindow& window) 
-: window_(window)
+: window_(window),
+window_width_(window_.getSize().x), window_height_(window_.getSize().y), 
+board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8)
 {
     textures_ = load_textures();
     pieces_.reserve(32);
@@ -25,7 +27,7 @@ chess::Board::Board(sf::RenderWindow& window)
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
 : window_(window), 
-window_width_(window.getSize().x), window_height_(window.getSize().y), 
+window_width_(window_.getSize().x), window_height_(window_.getSize().y), 
 board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8)
 {
     textures_ = load_textures();
@@ -38,8 +40,31 @@ board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ 
     resize();
 }
 
+chess::Board::Board(chess::Board& board)
+
+:
+non_advancing_moves(board.non_advancing_moves),
+move_num(board.move_num),
+current_player(board.current_player),
+rochade_rights(board.rochade_rights),
+enpasseaint_possible(board.enpasseaint_possible),
+enpasseaint_possible_at(board.enpasseaint_possible_at),
+window_(board.window_), 
+window_width_(window_.getSize().x), window_height_(window_.getSize().y), 
+board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8),
+white_tile_(board.white_tile_), black_tile_(board.black_tile_),
+textures_(board.textures_),
+selected_piece_(board.selected_piece_)
+
+{
+    pieces_.reserve(board.get_pieces().size());
+    for (const std::unique_ptr<Piece>& piece : board.get_pieces()) {
+        pieces_.emplace_back(piece->deep_copy());
+    }
+}
+
 std::vector<chess::ChessCoordinates> chess::Board::possible_moves(std::unique_ptr<Piece>& piece) {
-    std::vector<ChessCoordinates> considered_tiles = piece->get_possible_moves();
+    std::vector<ChessCoordinates> considered_tiles = piece->get_possible_moves(1);
 }
 
 
@@ -133,9 +158,14 @@ void chess::Board::update() {
     }
 }
 
+void chess::Board::move(chess::Piece& piece, chess::ChessCoordinates new_cords) {
+    piece.move(new_cords);
+}
 
 
-
+chess::Board chess::Board::deep_copy() {
+    return Board(*this);
+}
 
 
 

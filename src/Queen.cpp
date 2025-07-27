@@ -6,17 +6,17 @@ chess::Queen::Queen(chess::color piece_color, ChessCoordinates coordinates, sf::
 : Piece(piece_color, coordinates, texture, window, board)
 {}
 
-std::vector<chess::ChessCoordinates> chess::Queen::get_possible_moves() {
+std::vector<chess::ChessCoordinates> chess::Queen::get_possible_moves(int depth) {
     std::vector<chess::ChessCoordinates> possible_moves;
     std::vector<std::pair<int, int>> directions = {
-        {-1, 1},
         {1, 1},
-        {-1, -1},
+        {1, 0},
+        {1, -1},
         {-1, 1},
+        {-1, 0},
+        {-1, -1},
         {0, 1},
         {0, -1},
-        {-1, 0},
-        {1, 0},
     };
     for (auto& [dcoll, drow] : directions) {
         ChessCoordinates considered_cords = coordinates_;

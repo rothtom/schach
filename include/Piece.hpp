@@ -13,7 +13,7 @@ namespace chess {
     class Board;
     class Piece {
         public:
-            Piece() = default;
+            Piece() = delete;
             Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board);
             void draw();
             void update();
@@ -31,7 +31,8 @@ namespace chess {
             const color& get_color() const;
             virtual ~Piece() = default;
             virtual std::unique_ptr<Piece> deep_copy() = 0;
-            virtual std::vector<ChessCoordinates> get_possible_moves() = 0;
+            virtual std::vector<ChessCoordinates> get_possible_moves(int depth) = 0;
+            std::vector<ChessCoordinates> check_discovered_check(std::vector<ChessCoordinates>& possible_moves, int depth);
         protected:
             Board& board_;
             chess::color color_;
