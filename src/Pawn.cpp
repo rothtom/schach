@@ -6,7 +6,7 @@ chess::Pawn::Pawn(chess::color piece_color, ChessCoordinates coordinates, sf::Te
 : Piece(piece_color, coordinates, texture, window, board)
 {}
 
-std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves(int depth) {
+std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     std::vector<chess::ChessCoordinates> possible_moves;
     possible_moves.reserve(6);
     chess::ChessCoordinates tile_infront_1;

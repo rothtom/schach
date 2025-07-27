@@ -15,8 +15,8 @@ bool chess::is_piece_at(const std::vector<std::unique_ptr<chess::Piece>>& pieces
     return false;
 }
 
-const std::unique_ptr<chess::Piece>& chess::get_piece_at(const std::vector<std::unique_ptr<chess::Piece>>& pieces, chess::ChessCoordinates coords) {
-    for (const std::unique_ptr<chess::Piece>& piece : pieces) {
+std::unique_ptr<chess::Piece>& chess::get_piece_at(std::vector<std::unique_ptr<chess::Piece>>& pieces, chess::ChessCoordinates coords) {
+    for (std::unique_ptr<chess::Piece>& piece : pieces) {
         if (piece->get_coordinates() == coords) {
             return piece;
         }
@@ -41,12 +41,13 @@ bool chess::is_in_check(const std::vector<std::unique_ptr<chess::Piece>>& pieces
         if (piece->get_color() == king->get_color()) {
             continue;
         }
-        for (chess::ChessCoordinates coordinates : piece->get_possible_moves(2)) {
+        for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
             if (coordinates == king->get_coordinates()) {
                 return true;
             }
         }
     }
+    std::cout << "Not in check" << std::endl;
     return false;
 }
 

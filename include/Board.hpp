@@ -24,9 +24,10 @@ namespace chess {
             void resize();
             void update();
 
-            void move(Piece& piece, ChessCoordinates new_cords);
+            void move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
             std::map<std::unique_ptr<Piece>&, std::vector<ChessCoordinates>> all_possible_moves(color current_players_color);
-            std::vector<ChessCoordinates> possible_moves(std::unique_ptr<Piece>& piece);
+            std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
+            void set_possible_moves();
             void load_fen(std::string fen_string);
             std::string board_to_fen();
 
@@ -37,7 +38,7 @@ namespace chess {
             bool enpasseaint_possible;
             std::optional<ChessCoordinates> enpasseaint_possible_at;
 
-            const std::vector<std::unique_ptr<Piece>>& get_pieces();
+            std::vector<std::unique_ptr<Piece>>& get_pieces();
 
             Board deep_copy();
         private:

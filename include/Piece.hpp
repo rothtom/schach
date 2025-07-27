@@ -27,12 +27,13 @@ namespace chess {
 
             std::optional<ChessCoordinates> marker_clicked(sf::Vector2i& mouse_pos);
             void move(ChessCoordinates new_coordinates);
+
+            void set_possible_moves(std::vector<ChessCoordinates> possible_moves);
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
             virtual ~Piece() = default;
             virtual std::unique_ptr<Piece> deep_copy() = 0;
-            virtual std::vector<ChessCoordinates> get_possible_moves(int depth) = 0;
-            std::vector<ChessCoordinates> check_discovered_check(std::vector<ChessCoordinates>& possible_moves, int depth);
+            virtual std::vector<ChessCoordinates> get_possible_moves() = 0;
         protected:
             Board& board_;
             chess::color color_;
@@ -44,6 +45,7 @@ namespace chess {
             float tile_width_;
             bool selected_;
             sf::RenderWindow& window_;
+            std::vector<ChessCoordinates> possible_moves_;
             std::vector<PossibleMoveMarker> possible_move_markers_;
     };
 } // chess

@@ -6,7 +6,7 @@ chess::King::King(chess::color piece_color, ChessCoordinates coordinates, sf::Te
 : Piece(piece_color, coordinates, texture, window, board)
 {}
 
-std::vector<chess::ChessCoordinates> chess::King::get_possible_moves(int depth) {
+std::vector<chess::ChessCoordinates> chess::King::get_possible_moves() {
     std::vector<chess::ChessCoordinates> possible_moves;
     std::vector<std::pair<int, int>> directions = {
         {0, 1},
