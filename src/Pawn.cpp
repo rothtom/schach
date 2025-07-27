@@ -83,6 +83,6 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     return possible_moves;
 }
 
-std::unique_ptr<chess::Piece> chess::Pawn::deep_copy() {
+chess::Pawn::deep_copy() {
     return std::make_unique<Pawn>(*this);
 }

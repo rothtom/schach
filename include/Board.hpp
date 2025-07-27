@@ -24,7 +24,8 @@ namespace chess {
             void resize();
             void update();
 
-            void move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
+            void make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
+            void hypothetically_make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
             std::map<std::unique_ptr<Piece>&, std::vector<ChessCoordinates>> all_possible_moves(color current_players_color);
             std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
             void set_possible_moves();
@@ -53,5 +54,6 @@ namespace chess {
             std::map<std::string, sf::Texture> textures_;
             std::optional<std::reference_wrapper<Piece>> selected_piece_;
 
+            Board operator=(Board& other_board);
     };
 }

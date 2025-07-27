@@ -9,6 +9,8 @@
 
 #include <optional>
 #include <functional>
+#include <thread>
+#include <chrono>
 
 chess::Board::Board(sf::RenderWindow& window) 
 : window_(window),
@@ -69,23 +71,26 @@ std::vector<chess::ChessCoordinates> chess::Board::possible_moves(const std::uni
     std::vector<ChessCoordinates> considered_tiles = piece->get_possible_moves();
     // return considered_tiles;
     Board board_copy = this->deep_copy();
-    std::cout << "Copied board" << std::endl;
-    const std::unique_ptr<Piece>& same_colored_king = chess::get_king(board_copy.get_pieces(), piece->get_color());
-    std::cout << "Got king" << std::endl;
     std::cout << considered_tiles.size() << std::endl;
-    std::cout << (considered_tiles.begin() == considered_tiles.end()) << std::endl;
+    const std::unique_ptr<Piece>& same_colored_king = chess::get_king(board_copy.get_pieces(), piece->get_color());;
     for (std::vector<ChessCoordinates>::iterator it = considered_tiles.begin(); it != considered_tiles.end();) {
-        std::cout << "about to make move" << std::endl;
-        board_copy.move(piece_copy, *it);
-        std::cout << "making move" << std::endl;
+        board_copy = *this;
+        std::cout << piece_copy->get_coordinates().row << std::endl;
+        board_copy.hypothetically_make_move(piece_copy, *it);
+        /* window_.clear();
+        board_copy.update();
+        board_copy.draw();
+        window_.display();
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::cout << piece_copy->get_coordinates().row << std::endl; */
         if (chess::is_in_check(board_copy.get_pieces(), same_colored_king)) {
+            
             considered_tiles.erase(it);
         }
         else {
             it++;
         }
     }
-    std::cout << "for loop is over" << std::endl;
     return considered_tiles;
 }
 
@@ -157,7 +162,7 @@ void chess::Board::update() {
                         pieces_.erase(get_piece_iterator_at(pieces_, *cords_to_move_to));
                     }
                     std::unique_ptr<Piece>& piece = get_piece_at(pieces_, selected_piece_->get().get_coordinates());
-                    move(piece, *cords_to_move_to);
+                    make_move(piece, *cords_to_move_to);
                     selected_piece_->get().move(*cords_to_move_to);
                     selected_piece_.reset();
                     break;
@@ -188,7 +193,13 @@ void chess::Board::update() {
     }
 }
 
-void chess::Board::move(std::unique_ptr<Piece>& piece, chess::ChessCoordinates new_cords) {
+void chess::Board::make_move(std::unique_ptr<Piece>& piece, chess::ChessCoordinates new_cords) {
+    piece->move(new_cords);
+    current_player == WHITE ? current_player = BLACK : current_player = WHITE;
+    set_possible_moves();
+}
+
+void chess::Board::hypothetically_make_move(std::unique_ptr<Piece>& piece, chess::ChessCoordinates new_cords) {
     piece->move(new_cords);
     current_player == WHITE ? current_player = BLACK : current_player = WHITE;
 }
@@ -308,4 +319,8 @@ void chess::Board::load_fen(std::string fen_string) {
 
 std::vector<std::unique_ptr<chess::Piece>>& chess::Board::get_pieces() {
     return pieces_;
+}
+
+chess::Board chess::Board::operator=(chess::Board& other_board) {
+    return other_board.deep_copy();
 }
