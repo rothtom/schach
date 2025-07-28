@@ -14,8 +14,12 @@ namespace chess {
     class Piece {
         public:
             Piece() = delete;
+            virtual ~Piece();
             Piece(chess::color piece_color, chess::ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board);
+            void setTexture(sf::Texture& texture);
+            void setBoard(Board& board);
             void draw();
+            void draw_possible_move_markers();
             void update();
             void select();
             void disselect();
@@ -31,11 +35,10 @@ namespace chess {
             void set_possible_moves(std::vector<ChessCoordinates> possible_moves);
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
-            virtual ~Piece() = default;
-            virtual std::unique_ptr<Piece> deep_copy() = 0;
+            virtual std::unique_ptr<Piece> deep_copy(Board& board) = 0;
             virtual std::vector<ChessCoordinates> get_possible_moves() = 0;
         protected:
-            Board& board_;
+            Board* board_;
             chess::color color_;
             ChessCoordinates coordinates_;
             sf::Vector2f position_;

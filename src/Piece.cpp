@@ -4,8 +4,18 @@
 #include <optional>
 
 chess::Piece::Piece(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board) 
-: board_(board), color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window)
-{}
+: color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window)
+{
+    board_ = &board;
+}
+
+void chess::Piece::setTexture(sf::Texture& texture) {
+    texture_ = texture;
+}
+
+void chess::Piece::setBoard(chess::Board& board) {
+    board_ = &board;
+}
 
 void chess::Piece::resize(int tile_width) {
     tile_width_ = tile_width;
@@ -20,6 +30,9 @@ void chess::Piece::resize(int tile_width) {
 
 void chess::Piece::draw() {
     window_.draw(sprite_);
+}
+
+void chess::Piece::draw_possible_move_markers() {
     for (PossibleMoveMarker marker : possible_move_markers_) {
         marker.draw();
     }
@@ -101,5 +114,7 @@ void chess::Piece::move(ChessCoordinates new_coordinates) {
     disselect();
     update_position();
 }
+
+chess::Piece::~Piece() = default;
 
 

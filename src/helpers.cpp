@@ -47,7 +47,6 @@ bool chess::is_in_check(const std::vector<std::unique_ptr<chess::Piece>>& pieces
             }
         }
     }
-    std::cout << "Not in check" << std::endl;
     return false;
 }
 
@@ -59,6 +58,7 @@ std::vector<std::unique_ptr<chess::Piece>>::const_iterator chess::get_piece_iter
             return it;
         }
     }
+    throw std::runtime_error("could find piece iterator");
 }
 
 

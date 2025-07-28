@@ -28,8 +28,8 @@ std::vector<chess::ChessCoordinates> chess::Bishop::get_possible_moves() {
                     break;
             }
 
-            if (chess::is_piece_at(board_.get_pieces(), considered_cords)) {
-                if (chess::get_piece_at(board_.get_pieces(), considered_cords)->get_color() != color_) {
+            if (chess::is_piece_at(board_->get_pieces(), considered_cords)) {
+                if (chess::get_piece_at(board_->get_pieces(), considered_cords)->get_color() != color_) {
                     possible_moves.emplace_back(considered_cords);
                 }
                 break;
@@ -46,6 +46,9 @@ std::vector<chess::ChessCoordinates> chess::Bishop::get_possible_moves() {
     return possible_moves;
 }
 
-std::unique_ptr<chess::Piece> chess::Bishop::deep_copy() {
-    return std::make_unique<Bishop>(*this);
+std::unique_ptr<chess::Piece> chess::Bishop::deep_copy(Board& board) {
+    std::unique_ptr<Bishop> copy = std::make_unique<Bishop>(*this);
+    copy->setTexture(texture_);
+    copy->setBoard(board);
+    return copy;
 }

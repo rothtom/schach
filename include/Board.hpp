@@ -9,6 +9,9 @@
 #include "rochade_types.hpp"
 #include "helpers.hpp"
 
+using move = std::pair<std::unique_ptr<chess::Piece>&, chess::ChessCoordinates>;
+using moves = std::pair<std::unique_ptr<chess::Piece>&, std::vector<chess::ChessCoordinates>>;
+
 namespace chess {
     class Board {
         public:
@@ -20,15 +23,19 @@ namespace chess {
             void draw();
             void draw_tiles();
             void draw_pieces();
+            void draw_possible_move_markers();
 
             void resize();
             void update();
 
             void make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
             void hypothetically_make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
-            std::map<std::unique_ptr<Piece>&, std::vector<ChessCoordinates>> all_possible_moves(color current_players_color);
-            std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
-            void set_possible_moves();
+            std::vector<moves> all_possible_moves();
+            moves pieces_moves(std::unique_ptr<Piece>& piece);
+
+            bool is_now_in_check(const move move);
+            // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
+            // void set_possible_moves();
             void load_fen(std::string fen_string);
             std::string board_to_fen();
 
