@@ -28,8 +28,8 @@ std::vector<chess::ChessCoordinates> chess::Knight::get_possible_moves() {
                 continue;
         }
 
-        if (chess::is_piece_at(board_->get_pieces(), considered_cords)) {
-            if (chess::get_piece_at(board_->get_pieces(), considered_cords)->get_color() != color_) {
+        if (board_->is_piece_at(considered_cords)) {
+            if (board_->get_piece_at(considered_cords)->get_color() != color_) {
                 possible_moves.emplace_back(considered_cords);
             }
             continue;

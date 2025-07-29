@@ -49,6 +49,12 @@ namespace chess {
             std::vector<std::unique_ptr<Piece>>& get_pieces();
 
             Board deep_copy();
+
+            bool is_piece_at(ChessCoordinates coords);
+            std::unique_ptr<Piece>& get_piece_at(ChessCoordinates coords);
+            std::vector<std::unique_ptr<Piece>>::const_iterator get_piece_iterator_at(ChessCoordinates coords);
+            const std::unique_ptr<Piece>& get_king(color kings_color);
+            bool is_in_check(const std::unique_ptr<Piece>& king);
         private:
             sf::RenderWindow& window_;
             int window_width_;
