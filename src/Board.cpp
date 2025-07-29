@@ -92,7 +92,8 @@ bool chess::Board::is_now_in_check(move move) {
     Board board_copy = this->deep_copy();
     std::unique_ptr<Piece>& piece = get_piece_at(board_copy.get_pieces(), move.first->get_coordinates());
     board_copy.hypothetically_make_move(piece, move.second);
-    return is_in_check(board_copy.get_pieces(), get_king(board_copy.get_pieces(), piece->get_color()));
+    const std::unique_ptr<Piece>& king = get_king(board_copy.get_pieces(), piece->get_color());
+    return is_in_check(board_copy.get_pieces(), king);
 }
 
 
