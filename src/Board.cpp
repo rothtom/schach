@@ -25,6 +25,9 @@ board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ 
     load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     resize();
     all_possible_moves();
+
+    colors_players_[WHITE] = HUMAN;
+    colors_players_[BLACK] = AI;
 }
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
@@ -96,38 +99,6 @@ bool chess::Board::is_now_in_check(move move) {
     return board_copy.is_in_check(king);
 }
 
-
-/* probably trash 
-std::vector<chess::ChessCoordinates> chess::Board::possible_moves(const std::unique_ptr<Piece>& piece) {
-    std::unique_ptr<Piece> piece_copy = piece->deep_copy();
-    std::vector<ChessCoordinates> considered_tiles = piece->get_possible_moves();
-    // return considered_tiles;
-    Board board_copy = this->deep_copy();
-    std::cout << considered_tiles.size() << std::endl;
-    const std::unique_ptr<Piece>& same_colored_king = chess::get_king(board_copy.get_pieces(), piece->get_color());;
-    for (std::vector<ChessCoordinates>::iterator it = considered_tiles.begin(); it != considered_tiles.end();) {
-        board_copy = *this;
-        std::cout << piece_copy->get_coordinates().row << std::endl;
-        board_copy.hypothetically_make_move(piece_copy, *it);
-         window_.clear();
-        board_copy.update();
-        board_copy.draw();
-        window_.display();
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        std::cout << piece_copy->get_coordinates().row << std::endl; 
-        if (chess::is_in_check(board_copy.get_pieces(), same_colored_king)) {
-            
-            considered_tiles.erase(it);
-        }
-        else {
-            it++;
-        }
-    }
-    return considered_tiles;
-}
-
-*/
-
 void chess::Board::draw() {
     draw_tiles();
     draw_pieces();
@@ -186,7 +157,9 @@ void chess::Board::update() {
         else if (event->is<sf::Event::Resized>()) {
             resize();
         }
-        else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+        else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
+                mouseButtonPressed && colors_players_[current_player] == HUMAN) {
+            
             sf::Vector2i mouse_pos = mouseButtonPressed->position;
             if (selected_piece_.has_value()) {
                 std::optional<ChessCoordinates> cords_to_move_to = selected_piece_->get().marker_clicked(mouse_pos);

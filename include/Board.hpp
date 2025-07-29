@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <string>
-#include <map>
 #include <memory>
 
 #include "Piece.hpp"
 #include "colors.hpp"
+#include "player_type.hpp"
 #include "rochade_types.hpp"
 #include "helpers.hpp"
 
@@ -55,6 +55,10 @@ namespace chess {
             std::vector<std::unique_ptr<Piece>>::const_iterator get_piece_iterator_at(ChessCoordinates coords);
             const std::unique_ptr<Piece>& get_king(color kings_color);
             bool is_in_check(const std::unique_ptr<Piece>& king);
+
+            // ai logic
+            float evaluate();
+            chess::color get_current_player() const;
         private:
             sf::RenderWindow& window_;
             int window_width_;
@@ -68,5 +72,6 @@ namespace chess {
             std::optional<std::reference_wrapper<Piece>> selected_piece_;
 
             Board operator=(Board& other_board);
+            std::unordered_map<color, player_type> colors_players_;
     };
 }
