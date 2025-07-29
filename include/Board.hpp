@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <string>
@@ -8,6 +10,7 @@
 #include "player_type.hpp"
 #include "rochade_types.hpp"
 #include "helpers.hpp"
+#include "GameStatus.hpp"
 
 using move = std::pair<std::unique_ptr<chess::Piece>&, chess::ChessCoordinates>;
 using moves = std::pair<std::unique_ptr<chess::Piece>&, std::vector<chess::ChessCoordinates>>;
@@ -53,12 +56,15 @@ namespace chess {
             bool is_piece_at(ChessCoordinates coords);
             std::unique_ptr<Piece>& get_piece_at(ChessCoordinates coords);
             std::vector<std::unique_ptr<Piece>>::const_iterator get_piece_iterator_at(ChessCoordinates coords);
-            const std::unique_ptr<Piece>& get_king(color kings_color);
-            bool is_in_check(const std::unique_ptr<Piece>& king);
-
+            const std::unique_ptr<Piece>& get_king(color kings_color) const;
+            bool is_in_check();
+            bool is_checkmate();
+            game_status status;
             // ai logic
             float evaluate();
             chess::color get_current_player() const;
+            move best_move() const;
+
         private:
             sf::RenderWindow& window_;
             int window_width_;

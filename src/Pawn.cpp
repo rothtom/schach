@@ -43,10 +43,6 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
             possible_moves.emplace_back(tile_infront_2);
         }
         // piece of opposit color infront
-        else if (board_->get_piece_at(tile_infront_2)->get_color() != color_) {
-            possible_moves.emplace_back(tile_infront_2);            
-            return possible_moves;
-        }
         else { // there has to be a piece of the same color infront
             return possible_moves;
         }
