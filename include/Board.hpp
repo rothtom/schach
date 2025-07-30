@@ -16,6 +16,7 @@ using move = std::pair<std::unique_ptr<chess::Piece>&, chess::ChessCoordinates>;
 using moves = std::pair<std::unique_ptr<chess::Piece>&, std::vector<chess::ChessCoordinates>>;
 
 namespace chess {
+    class King;
     class Board {
         public:
             Board(sf::RenderWindow& window, std::string fen_string);
@@ -31,8 +32,8 @@ namespace chess {
             void resize();
             void update();
 
-            void make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
-            void hypothetically_make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
+            void make_move(chess::Piece* piece, ChessCoordinates new_cords);
+            void hypothetically_make_move(chess::Piece* piece, ChessCoordinates new_cords);
             std::vector<moves> all_possible_moves();
             moves pieces_moves(std::unique_ptr<Piece>& piece);
             void set_possible_moves(moves moves);
@@ -56,16 +57,18 @@ namespace chess {
             Board deep_copy();
 
             bool is_piece_at(ChessCoordinates coords);
-            std::unique_ptr<Piece>& get_piece_at(ChessCoordinates coords);
+            chess::Piece* get_piece_at(ChessCoordinates coords);
             std::vector<std::unique_ptr<Piece>>::iterator get_piece_iterator_at(ChessCoordinates coords);
-            const std::unique_ptr<Piece>& get_king(color kings_color) const;
+            King* get_king(color kings_color) const;
             bool is_in_check();
             bool is_checkmate();
             game_status status;
             // ai logic
             float evaluate();
             chess::color get_current_player() const;
-            move best_move() const;
+            move best_move();
+            move best_move_white();
+            move best_move_black();
 
         private:
             sf::RenderWindow& window_;

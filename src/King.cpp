@@ -31,6 +31,7 @@ std::vector<chess::ChessCoordinates> chess::King::get_possible_moves() {
         if (board_->is_piece_at(considered_cords)) {
             if (board_->get_piece_at(considered_cords)->get_color() != color_) {
                 possible_moves.emplace_back(considered_cords);
+                
             }
             continue;
         }
