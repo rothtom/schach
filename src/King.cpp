@@ -39,6 +39,7 @@ std::vector<chess::ChessCoordinates> chess::King::get_possible_moves() {
             possible_moves.emplace_back(considered_cords);
         }
     }
+
     return possible_moves;
 }
 

@@ -33,6 +33,8 @@ namespace chess {
             void move(ChessCoordinates new_coordinates);
 
             void set_possible_moves(std::vector<ChessCoordinates> possible_moves);
+            void add_possible_move(ChessCoordinates possible_move);
+            void reset_possible_moves();
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
             virtual std::unique_ptr<Piece> deep_copy(Board& board) = 0;

@@ -12,8 +12,8 @@
 #include "helpers.hpp"
 #include "GameStatus.hpp"
 
-using move = std::pair<std::unique_ptr<chess::Piece>&, chess::ChessCoordinates>;
-using moves = std::pair<std::unique_ptr<chess::Piece>&, std::vector<chess::ChessCoordinates>>;
+using move = std::pair<chess::ChessCoordinates, chess::ChessCoordinates>;
+// using moves = std::pair<chess::ChessCoordinates, std::vector<chess::ChessCoordinates>>;
 
 namespace chess {
     class King;
@@ -34,9 +34,9 @@ namespace chess {
 
             void make_move(chess::Piece* piece, ChessCoordinates new_cords);
             void hypothetically_make_move(chess::Piece* piece, ChessCoordinates new_cords);
-            std::vector<moves> all_possible_moves();
-            moves pieces_moves(std::unique_ptr<Piece>& piece);
-            void set_possible_moves(moves moves);
+            std::vector<move> all_possible_moves();
+            std::vector<move> pieces_moves(std::unique_ptr<Piece>& piece);
+            void set_possible_moves(std::vector<move> moves);
 
 
             bool is_now_in_check(const move move);

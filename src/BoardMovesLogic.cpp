@@ -2,28 +2,46 @@
 
 #include "King.hpp"
 
-moves chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
-    std::vector<ChessCoordinates> pieces_possible_tiles;
+std::vector<move> chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
+    std::vector<move> pieces_possible_moves = {};
+    move current_move(piece->get_coordinates(), ChessCoordinates('z', -1));
     for (ChessCoordinates& target_tile : piece->get_possible_moves()) {
-        if (not is_now_in_check(std::pair<std::unique_ptr<Piece>&, ChessCoordinates>(piece, target_tile)) and not is_in_check()) {
-            pieces_possible_tiles.emplace_back(target_tile);
+        current_move.second = target_tile;
+        if (not is_now_in_check(current_move) and not is_in_check()) {
+            pieces_possible_moves.emplace_back(current_move);
         }
     }
     // set possible moves for piece
-    return moves(piece, pieces_possible_tiles);
+    
+    return pieces_possible_moves;
 }
 
-void chess::Board::set_possible_moves(moves moves) {
-    moves.first->set_possible_moves(moves.second);
+void chess::Board::set_possible_moves(std::vector<move> moves) {
+    for (auto& [start, target] : moves) {
+        get_piece_at(start)->add_possible_move(target);
+    }
 }
 
-std::vector<moves> chess::Board::all_possible_moves() {
-    std::vector<moves> possible_moves;
+std::vector<move> chess::Board::all_possible_moves() {
+    std::vector<move> possible_moves;
+    std::vector<move>pieces_possible_moves;
     for (std::unique_ptr<Piece>& piece : pieces_) {
         if (piece->get_color() == current_player) {
-            moves pieces_possible_moves = pieces_moves(piece);
-            set_possible_moves(pieces_possible_moves);
-            possible_moves.emplace_back(pieces_possible_moves);
+            pieces_possible_moves = pieces_moves(piece);
+            piece->reset_possible_moves();
+            for (auto& pieces_possible_move : pieces_possible_moves) {
+                piece->add_possible_move(pieces_possible_move.second);
+                possible_moves.emplace_back(pieces_possible_move);
+            }
+        }
+        if (dynamic_cast<chess::King*>(piece.get())) {
+            if (piece->get_color() == WHITE) {
+                for (rochade_types rochade_type : rochade_rights) {
+                    if (rochade_type == K) {
+
+                    }
+                }
+            }
         }
     }
     return possible_moves;
@@ -31,7 +49,7 @@ std::vector<moves> chess::Board::all_possible_moves() {
 
 bool chess::Board::is_now_in_check(move move) {
     Board board_copy = this->deep_copy();
-    Piece* piece = board_copy.get_piece_at(move.first->get_coordinates());
+    Piece* piece = board_copy.get_piece_at(move.first);
     board_copy.hypothetically_make_move(piece, move.second);
     bool now_check;
     
@@ -86,11 +104,8 @@ bool chess::Board::is_checkmate() {
     if (not is_in_check()) {
         return false;
     }
-    for (moves& moves : all_possible_moves()) {
-        if (not moves.second.empty()) {
-            std::cout << moves.second.at(0).coll << moves.second.at(0).row << std::endl;
-            return false;
-        }
+    if (not all_possible_moves().empty()) {
+        return false;
     }
     return true;
 }

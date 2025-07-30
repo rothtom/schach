@@ -81,6 +81,14 @@ void chess::Piece::set_possible_moves(std::vector<chess::ChessCoordinates> possi
     possible_moves_ = possible_moves;
 }
 
+void chess::Piece::add_possible_move(chess::ChessCoordinates possible_move) {
+    possible_moves_.emplace_back(possible_move);
+}
+
+void chess::Piece::reset_possible_moves() {
+    possible_moves_ = {};
+}
+
 void chess::Piece::disselect() {
     selected_ = false;
     possible_move_markers_.clear();
