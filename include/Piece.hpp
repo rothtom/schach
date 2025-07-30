@@ -30,7 +30,7 @@ namespace chess {
             bool is_clicked(sf::Vector2i& mouse_pos);
 
             std::optional<ChessCoordinates> marker_clicked(sf::Vector2i& mouse_pos);
-            void move(ChessCoordinates new_coordinates);
+            virtual void move(ChessCoordinates new_coordinates);
 
             void set_possible_moves(std::vector<ChessCoordinates> possible_moves);
             void add_possible_move(ChessCoordinates possible_move);

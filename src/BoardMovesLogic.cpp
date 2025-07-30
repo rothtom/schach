@@ -35,16 +35,79 @@ std::vector<move> chess::Board::all_possible_moves() {
             }
         }
         if (dynamic_cast<chess::King*>(piece.get())) {
+            move possible_rochade_move;
             if (piece->get_color() == WHITE) {
+                
                 for (rochade_types rochade_type : rochade_rights) {
-                    if (rochade_type == K) {
-
+                    switch (rochade_type) {
+                        case K:
+                            if (is_piece_at(ChessCoordinates('f', 1))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('g', 1))) {continue;}
+                            possible_rochade_move = move(ChessCoordinates({'e', 1}), ChessCoordinates({'g', 1}));
+                            possible_moves.emplace_back(possible_rochade_move);
+                            piece->add_possible_move(possible_rochade_move.second);
+                        case Q:
+                            if (is_piece_at(ChessCoordinates('b', 1))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('c', 1))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('d', 1))) {continue;}
+                            possible_rochade_move = move(ChessCoordinates({'e', 1}), ChessCoordinates({'c', 8}));
+                            possible_moves.emplace_back(possible_rochade_move);
+                            piece->add_possible_move(possible_rochade_move.second);
+                        default:
+                            break;
+                    }
+                }
+            }
+            else {
+                for (rochade_types rochade_type : rochade_rights) {
+                    switch (rochade_type) {
+                        case k:
+                            if (is_piece_at(ChessCoordinates('f', 8))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('g', 8))) {continue;}
+                            possible_rochade_move = move(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}));
+                            possible_moves.emplace_back(possible_rochade_move);
+                            piece->add_possible_move(possible_rochade_move.second);
+                        case q:
+                            if (is_piece_at(ChessCoordinates('b', 8))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('c', 8))) {continue;}
+                            else if (is_piece_at(ChessCoordinates('d', 8))) {continue;}
+                            possible_rochade_move = move(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}));
+                            possible_moves.emplace_back(possible_rochade_move);
+                            piece->add_possible_move(possible_rochade_move.second);
+                        default:
+                            break;
                     }
                 }
             }
         }
     }
     return possible_moves;
+}
+
+
+
+
+
+bool chess::Board::is_attacked(const chess::ChessCoordinates& tile) {
+    color attacking_color;
+    current_player == WHITE ? attacking_color = BLACK : attacking_color = WHITE;
+    for (const std::unique_ptr<Piece>& piece : pieces_) {
+        if (piece->get_color() == attacking_color) {
+            continue;
+        }
+        for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
+            if (coordinates == tile) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool chess::Board::is_in_check() {
+    color kings_color;
+    current_player == WHITE ? kings_color = BLACK : kings_color = WHITE;
+    return is_attacked(get_king(kings_color)->get_coordinates());
 }
 
 bool chess::Board::is_now_in_check(move move) {
@@ -57,23 +120,6 @@ bool chess::Board::is_now_in_check(move move) {
         // std::cout << "eliminated move: " << move.second.coll << move.second.row << std::endl;
     }
     return now_check;
-}
-
-bool chess::Board::is_in_check() {
-    color kings_color;
-    current_player == WHITE ? kings_color = BLACK : kings_color = WHITE;
-    const chess::King* king = get_king(kings_color);
-    for (const std::unique_ptr<Piece>& piece : pieces_) {
-        if (piece->get_color() == king->get_color()) {
-            continue;
-        }
-        for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
-            if (coordinates == king->get_coordinates()) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 

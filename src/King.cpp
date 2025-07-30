@@ -49,3 +49,25 @@ std::unique_ptr<chess::Piece> chess::King::deep_copy(Board& board) {
     copy->setBoard(board);
     return copy;
 }
+
+void chess::King::move(chess::ChessCoordinates new_cords) {
+    if (new_cords == ChessCoordinates('g', 1)) {
+        coordinates_ = new_cords;
+        board_->get_piece_at(ChessCoordinates('h', 1))->move(ChessCoordinates('f', 1));
+    }
+    else if (new_cords == ChessCoordinates('c', 1)) {
+        coordinates_ = new_cords;
+        board_->get_piece_at(ChessCoordinates('a', 1))->move(ChessCoordinates('d', 1));
+    }
+    else if (new_cords == ChessCoordinates('g', 8)) {
+        coordinates_ = new_cords;
+        board_->get_piece_at(ChessCoordinates('h', 8))->move(ChessCoordinates('f', 8));
+    }
+    else if (new_cords == ChessCoordinates('c', 8)) {
+        coordinates_ = new_cords;
+        board_->get_piece_at(ChessCoordinates('a', 8))->move(ChessCoordinates('d', 8));
+    }
+    possible_move_markers_.clear();
+    disselect();
+    update_position();
+}
