@@ -4,7 +4,7 @@ namespace chess {
     class Pawn: public Piece {
         public:
             Pawn(color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board);
-            std::vector<ChessCoordinates> get_possible_moves();
+            std::vector<ChessCoordinates> get_possible_moves() override;
             virtual std::unique_ptr<Piece> deep_copy(Board& board) override;
         private:
     };

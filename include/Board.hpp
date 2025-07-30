@@ -35,6 +35,8 @@ namespace chess {
             void hypothetically_make_move(std::unique_ptr<Piece>& piece, ChessCoordinates new_cords);
             std::vector<moves> all_possible_moves();
             moves pieces_moves(std::unique_ptr<Piece>& piece);
+            void set_possible_moves(moves moves);
+
 
             bool is_now_in_check(const move move);
             // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
@@ -55,7 +57,7 @@ namespace chess {
 
             bool is_piece_at(ChessCoordinates coords);
             std::unique_ptr<Piece>& get_piece_at(ChessCoordinates coords);
-            std::vector<std::unique_ptr<Piece>>::const_iterator get_piece_iterator_at(ChessCoordinates coords);
+            std::vector<std::unique_ptr<Piece>>::iterator get_piece_iterator_at(ChessCoordinates coords);
             const std::unique_ptr<Piece>& get_king(color kings_color) const;
             bool is_in_check();
             bool is_checkmate();

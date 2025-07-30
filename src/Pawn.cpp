@@ -8,7 +8,7 @@ chess::Pawn::Pawn(chess::color piece_color, ChessCoordinates coordinates, sf::Te
 
 std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     std::vector<chess::ChessCoordinates> possible_moves;
-    possible_moves.reserve(6);
+    possible_moves.reserve(4);
     chess::ChessCoordinates tile_infront_1;
     if (color_ == WHITE) {
         tile_infront_1 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row + 1)});
@@ -19,34 +19,25 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     // no piece infront
     if (not board_->is_piece_at(tile_infront_1)) {
         possible_moves.emplace_back(tile_infront_1);
-    }
-    else { // there has to be a piece of the same color infront
-        return possible_moves;
-    }
-
-    chess::ChessCoordinates tile_infront_2;
-    if (color_ == WHITE) {
-        tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row + 2)});
-        if (coordinates_.row == 2) {
-        if (not board_->is_piece_at(tile_infront_2)) {
-            possible_moves.emplace_back(tile_infront_2);
+        chess::ChessCoordinates tile_infront_2;
+        if (color_ == WHITE ) {
+            if (coordinates_.row == 2) {
+                tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row + 2)});
+                if (not board_->is_piece_at(tile_infront_2)) {
+                    possible_moves.emplace_back(tile_infront_2);
+                }
+            }
         }
-        else { // there has to be a piece of the same color infront
-            return possible_moves;
-        }
-    }
-    }
-    else {
-        tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row - 2)});
-        if (coordinates_.row == 7) {
-        if (not board_->is_piece_at(tile_infront_2)) {
-            possible_moves.emplace_back(tile_infront_2);
-        }
-        // piece of opposit color infront
-        else { // there has to be a piece of the same color infront
-            return possible_moves;
-        }
-    }
+        else {
+            if (coordinates_.row == 7) {
+                tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row - 2)});
+                if (coordinates_.row == 7) {
+                    if (not board_->is_piece_at(tile_infront_2)) {
+                        possible_moves.emplace_back(tile_infront_2);
+                    }
+                }
+            }
+       }
     }
 
     chess::ChessCoordinates tile_diagonal_1;
@@ -75,7 +66,6 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
         }
     }
 
-    
     return possible_moves;
 }
 
