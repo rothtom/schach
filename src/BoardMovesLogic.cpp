@@ -5,7 +5,7 @@
 moves chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
     std::vector<ChessCoordinates> pieces_possible_tiles;
     for (ChessCoordinates& target_tile : piece->get_possible_moves()) {
-        if (not is_now_in_check(std::pair<std::unique_ptr<Piece>&, ChessCoordinates>(piece, target_tile))) {
+        if (not is_now_in_check(std::pair<std::unique_ptr<Piece>&, ChessCoordinates>(piece, target_tile)) and not is_in_check()) {
             pieces_possible_tiles.emplace_back(target_tile);
         }
     }
@@ -84,12 +84,10 @@ void chess::Board::hypothetically_make_move(chess::Piece* piece, chess::ChessCoo
 
 bool chess::Board::is_checkmate() {
     if (not is_in_check()) {
-        std::cout << "Not in check" << std::endl;
         return false;
     }
     for (moves& moves : all_possible_moves()) {
         if (not moves.second.empty()) {
-            std::cout << "Still moves available" << std::endl;
             std::cout << moves.second.at(0).coll << moves.second.at(0).row << std::endl;
             return false;
         }
