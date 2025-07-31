@@ -1,13 +1,17 @@
 #include "Pawn.hpp"
 
 #include "Board.hpp"
+#include "Move.hpp"
+#include "PromotionMove.hpp"
+#include "PossibleMoveMarker.hpp"
+#include "PossiblePromotionMarker.hpp"
 
 chess::Pawn::Pawn(chess::color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board)
 : Piece(piece_color, coordinates, texture, window, board)
 {}
 
-std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
-    std::vector<chess::ChessCoordinates> possible_moves;
+std::vector<std::unique_ptr<chess::Move>> chess::Pawn::get_possible_moves() {
+    std::vector<std::unique_ptr<Move>> possible_moves;
     possible_moves.reserve(4);
     chess::ChessCoordinates tile_infront_1;
     if (color_ == WHITE) {
@@ -18,13 +22,21 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     }
     // no piece infront
     if (not board_->is_piece_at(tile_infront_1)) {
-        possible_moves.emplace_back(tile_infront_1);
+        if (tile_infront_1.row == 8 or tile_infront_1.row == 1) {
+            possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, QUEEN, *board_));
+            possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, ROOK, *board_));
+            possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, BISHOP, *board_));
+            possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, KNIGHT, *board_));
+        }
+        else {
+            possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_1, *board_));
+        }
         chess::ChessCoordinates tile_infront_2;
         if (color_ == WHITE ) {
             if (coordinates_.row == 2) {
                 tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row + 2)});
                 if (not board_->is_piece_at(tile_infront_2)) {
-                    possible_moves.emplace_back(tile_infront_2);
+                    possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_1, *board_));
                 }
             }
         }
@@ -33,7 +45,7 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
                 tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row - 2)});
                 if (coordinates_.row == 7) {
                     if (not board_->is_piece_at(tile_infront_2)) {
-                        possible_moves.emplace_back(tile_infront_2);
+                        possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_2, *board_));
                     }
                 }
             }
@@ -49,7 +61,15 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     }
     if (board_->is_piece_at(tile_diagonal_1)) {
         if (board_->get_piece_at(tile_diagonal_1)->get_color() != color_) {
-            possible_moves.emplace_back(tile_diagonal_1);
+            if (tile_diagonal_1.row == 8 or tile_diagonal_1.row == 1) {
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, QUEEN, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, ROOK, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, BISHOP, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, KNIGHT, *board_));
+            }
+            else {
+                possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_diagonal_1, *board_));
+            }
         }
     }
 
@@ -62,7 +82,15 @@ std::vector<chess::ChessCoordinates> chess::Pawn::get_possible_moves() {
     }
     if (board_->is_piece_at(tile_diagonal_2)) {
         if (board_->get_piece_at(tile_diagonal_2)->get_color() != color_) {
-            possible_moves.emplace_back(tile_diagonal_2);
+            if (tile_diagonal_2.row == 8 or tile_diagonal_2.row == 1) {
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, QUEEN, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, ROOK, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, BISHOP, *board_));
+                possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, KNIGHT, *board_));
+            }
+            else {
+                possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_diagonal_2, *board_));
+            }
         }
     }
 
@@ -73,5 +101,9 @@ std::unique_ptr<chess::Piece> chess::Pawn::deep_copy(Board& board) {
     std::unique_ptr<Pawn> copy = std::make_unique<Pawn>(*this);
     copy->setTexture(texture_);
     copy->setBoard(board);
+    for (const auto& move : possible_moves_) {
+        copy->possible_moves_.emplace_back(move->deep_copy(board));
+    }
     return copy;
 }
+

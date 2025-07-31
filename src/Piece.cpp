@@ -1,5 +1,9 @@
 #include "Piece.hpp"
 #include "Board.hpp"
+#include "PossibleMoveMarker.hpp"
+#include "PossiblePromotionMarker.hpp"
+#include "PromotionMove.hpp"
+
 
 #include <optional>
 
@@ -7,6 +11,14 @@ chess::Piece::Piece(color piece_color, ChessCoordinates coordinates, sf::Texture
 : color_(piece_color), coordinates_(coordinates), texture_(texture), sprite_(texture), selected_(false), window_(window)
 {
     board_ = &board;
+}
+
+chess::Piece::Piece(const chess::Piece& other) 
+: color_(other.color_), coordinates_(other.coordinates_), texture_(other.texture_), sprite_(texture_), selected_(false), window_(other.window_)
+{
+    for (const auto& move : other.possible_moves_) {
+        possible_moves_.emplace_back(std::make_unique<chess::Move>(*move));  // assumes Move has a copy constructor
+    }
 }
 
 void chess::Piece::setTexture(sf::Texture& texture) {
@@ -24,7 +36,7 @@ void chess::Piece::resize(int tile_width) {
     update_position();
 
     for (auto& marker : possible_move_markers_) {
-        marker.resize(tile_width);
+        marker->resize(tile_width);
     }
 }
 
@@ -33,8 +45,8 @@ void chess::Piece::draw() {
 }
 
 void chess::Piece::draw_possible_move_markers() {
-    for (PossibleMoveMarker marker : possible_move_markers_) {
-        marker.draw();
+    for (std::unique_ptr<PossibleMoveMarker>& marker : possible_move_markers_) {
+        marker->draw();
     }
 }
 
@@ -60,8 +72,8 @@ bool chess::Piece::is_hovered(sf::Vector2i& mouse_pos) {
 
 std::optional<chess::ChessCoordinates> chess::Piece::marker_clicked(sf::Vector2i& mouse_pos) {
     for (auto& marker : possible_move_markers_) {
-        if (marker.is_clicked(mouse_pos)) {
-            return marker.get_coordinates();
+        if (marker->is_clicked(mouse_pos)) {
+            return marker->get_coordinates();
         }
     }
     return std::nullopt;
@@ -71,22 +83,51 @@ std::optional<chess::ChessCoordinates> chess::Piece::marker_clicked(sf::Vector2i
 void chess::Piece::select() {
     selected_ = true;
     possible_move_markers_.reserve(possible_moves_.capacity());
-    for (ChessCoordinates coordinate : possible_moves_) {
-        possible_move_markers_.emplace_back(PossibleMoveMarker(coordinate, tile_width_, window_));
+    for (std::unique_ptr<Move>& move : possible_moves_) {
+        if (dynamic_cast<PromotionMove*>(move.get())) {
+            if (color_ == WHITE) {
+                if (move->get_piece_name_to_promote_to() == QUEEN) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, QUEEN, tile_width_, board_->textures["w-queen"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == ROOK) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, ROOK, tile_width_, board_->textures["w-rook"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == BISHOP) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, BISHOP, tile_width_, board_->textures["w-bishop"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == KNIGHT) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, KNIGHT, tile_width_, board_->textures["w-knight"] , window_)); 
+                }
+            }
+            else {
+                if (move->get_piece_name_to_promote_to() == QUEEN) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, QUEEN, tile_width_, board_->textures["b-queen"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == ROOK) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, ROOK, tile_width_, board_->textures["b-rook"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == BISHOP) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, BISHOP, tile_width_, board_->textures["b-bishop"] , window_)); 
+                }
+                else if (move->get_piece_name_to_promote_to() == KNIGHT) {
+                    possible_move_markers_.emplace_back(std::make_unique<PossiblePromotionMarker>(move->get_target_cords(), color_, KNIGHT, tile_width_, board_->textures["b-knight"] , window_)); 
+                }
+            }
+            
+        }
+        else {
+            possible_move_markers_.emplace_back(std::make_unique<PossibleMoveMarker>(move->get_target_cords(), tile_width_, window_)); 
+        }
     }
     update_position();
 }
 
-void chess::Piece::set_possible_moves(std::vector<chess::ChessCoordinates> possible_moves) {
-    possible_moves_ = possible_moves;
-}
-
-void chess::Piece::add_possible_move(chess::ChessCoordinates possible_move) {
-    possible_moves_.emplace_back(possible_move);
+void chess::Piece::add_possible_move(chess::Move possible_move) {
+    possible_moves_.emplace_back(std::make_unique<Move>(possible_move));
 }
 
 void chess::Piece::reset_possible_moves() {
-    possible_moves_ = {};
+    possible_moves_.clear();
 }
 
 void chess::Piece::disselect() {

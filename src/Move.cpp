@@ -7,9 +7,11 @@ chess::Move::Move(const ChessCoordinates& piece_cords, const ChessCoordinates& t
     board_ = &board;
 }
 
-chess::Move::Move() 
-: piece_cords_('x', 9), target_cords_('x', 9), board_(nullptr)
-{}
+chess::Move::Move(const Move& other) 
+: piece_cords_(other.piece_cords_), target_cords_(other.target_cords_)
+{
+    
+}
 
 void chess::Move::make_move() {
     if (board_->is_piece_at(target_cords_)) {
@@ -44,6 +46,12 @@ void chess::Move::set_board(Board& board) {
     board_ = &board;
 }
 
-chess::Move chess::Move::deep_copy(chess::Board& new_board) {
-    return Move(piece_cords_, target_cords_, new_board);
+std::unique_ptr<chess::Move> chess::Move::deep_copy(chess::Board& new_board) {
+    Move move_copy(*this);
+    move_copy.set_board(new_board);
+    return std::make_unique<Move>(move_copy);
+}
+
+chess::piece_name chess::Move::get_piece_name_to_promote_to() const {
+    throw std::logic_error("Dont call this on non promoting moves!");
 }

@@ -20,7 +20,7 @@ window_width_(window_.getSize().x), window_height_(window_.getSize().y),
 board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8),
 status(ON_GOING)
 {
-    textures_ = load_textures();
+    textures = load_textures();
     pieces_.reserve(32);
     white_tile_.setFillColor(sf::Color(240, 217, 181));
     black_tile_.setFillColor(sf::Color(181, 136, 99));
@@ -40,7 +40,7 @@ board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ 
 status(ON_GOING)
 
 {
-    textures_ = load_textures();
+    textures = load_textures();
     pieces_.reserve(32);
     white_tile_.setFillColor(sf::Color(240, 217, 181));
     black_tile_.setFillColor(sf::Color(181, 136, 99));
@@ -65,7 +65,7 @@ window_(board.window_),
 window_width_(window_.getSize().x), window_height_(window_.getSize().y), 
 board_width_(std::min(window_width_, window_height_)), tile_width_(board_width_ / 8),
 white_tile_(board.white_tile_), black_tile_(board.black_tile_),
-textures_(board.textures_)
+textures(board.textures)
 
 {
     pieces_.reserve(board.get_pieces().size());
@@ -152,6 +152,9 @@ void chess::Board::update() {
             }
 
             for (auto& piece : pieces_) {
+                if (status != ON_GOING) {
+                    break;
+                }
                 if (piece->is_clicked(mouse_pos) && piece->get_color() == current_player) {
                     if (piece->is_selected()) {
                         piece->disselect();
@@ -192,41 +195,41 @@ void chess::Board::load_fen(std::string fen_string) {
         else {
             // black pieces -> lower case letters
             if (c == 'k') {
-               pieces_.emplace_back(std::make_unique<King>(BLACK, ChessCoordinates({collumn, row}), textures_["b-king"], window_, *this));
+               pieces_.emplace_back(std::make_unique<King>(BLACK, ChessCoordinates({collumn, row}), textures["b-king"], window_, *this));
             }
             else if (c == 'q') {
-                pieces_.emplace_back(std::make_unique<Queen>(BLACK, ChessCoordinates({collumn, row}), textures_["b-queen"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Queen>(BLACK, ChessCoordinates({collumn, row}), textures["b-queen"], window_, *this));
             }
             else if (c == 'r') {
-                pieces_.emplace_back(std::make_unique<Rook>(BLACK, ChessCoordinates({collumn, row}), textures_["b-rook"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Rook>(BLACK, ChessCoordinates({collumn, row}), textures["b-rook"], window_, *this));
             }
             else if (c == 'b') {
-                pieces_.emplace_back(std::make_unique<Bishop>(BLACK, ChessCoordinates({collumn, row}), textures_["b-bishop"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Bishop>(BLACK, ChessCoordinates({collumn, row}), textures["b-bishop"], window_, *this));
             }
             else if (c == 'n') {
-                pieces_.emplace_back(std::make_unique<Knight>(BLACK, ChessCoordinates({collumn, row}), textures_["b-knight"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Knight>(BLACK, ChessCoordinates({collumn, row}), textures["b-knight"], window_, *this));
             }
             else if (c == 'p') {
-                pieces_.emplace_back(std::make_unique<Pawn>(BLACK, ChessCoordinates({collumn, row}), textures_["b-pawn"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Pawn>(BLACK, ChessCoordinates({collumn, row}), textures["b-pawn"], window_, *this));
             }
 
             else if (c == 'K') {
-               pieces_.emplace_back(std::make_unique<King>(WHITE, ChessCoordinates({collumn, row}), textures_["w-king"], window_, *this));
+               pieces_.emplace_back(std::make_unique<King>(WHITE, ChessCoordinates({collumn, row}), textures["w-king"], window_, *this));
             }
             else if (c == 'Q') {
-                pieces_.emplace_back(std::make_unique<Queen>(WHITE, ChessCoordinates({collumn, row}), textures_["w-queen"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Queen>(WHITE, ChessCoordinates({collumn, row}), textures["w-queen"], window_, *this));
             }
             else if (c == 'R') {
-                pieces_.emplace_back(std::make_unique<Rook>(WHITE, ChessCoordinates({collumn, row}), textures_["w-rook"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Rook>(WHITE, ChessCoordinates({collumn, row}), textures["w-rook"], window_, *this));
             }
             else if (c == 'B') {
-                pieces_.emplace_back(std::make_unique<Bishop>(WHITE, ChessCoordinates({collumn, row}), textures_["w-bishop"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Bishop>(WHITE, ChessCoordinates({collumn, row}), textures["w-bishop"], window_, *this));
             }
             else if (c == 'N') {
-                pieces_.emplace_back(std::make_unique<Knight>(WHITE, ChessCoordinates({collumn, row}), textures_["w-knight"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Knight>(WHITE, ChessCoordinates({collumn, row}), textures["w-knight"], window_, *this));
             }
             else if (c == 'P') {
-                pieces_.emplace_back(std::make_unique<Pawn>(WHITE, ChessCoordinates({collumn, row}), textures_["w-pawn"], window_, *this));
+                pieces_.emplace_back(std::make_unique<Pawn>(WHITE, ChessCoordinates({collumn, row}), textures["w-pawn"], window_, *this));
             }
             else {}
 
@@ -321,4 +324,39 @@ std::vector<std::unique_ptr<chess::Piece>>::iterator chess::Board::get_piece_ite
 
 chess::color chess::Board::get_current_player() const {
     return current_player;
+}
+
+void chess::Board::add_piece(piece_name piece_name, color piece_color, ChessCoordinates coordinates) {
+    if (piece_name == QUEEN) {
+        if (piece_color == WHITE) {
+            pieces_.emplace_back(std::make_unique<Queen>(WHITE, coordinates, textures["w-queen"], window_, *this));
+        }
+        else {
+            pieces_.emplace_back(std::make_unique<Queen>(BLACK, coordinates, textures["b-queen"], window_, *this));
+        }
+    }
+    else if (piece_name == ROOK) {
+        if (piece_color == WHITE) {
+            pieces_.emplace_back(std::make_unique<Rook>(WHITE, coordinates, textures["w-rook"], window_, *this));
+        }
+        else {
+            pieces_.emplace_back(std::make_unique<Rook>(BLACK, coordinates, textures["b-rook"], window_, *this));
+        }
+    }
+    else if (piece_name == BISHOP) {
+        if (piece_color == WHITE) {
+            pieces_.emplace_back(std::make_unique<Bishop>(WHITE, coordinates, textures["w-bishop"], window_, *this));
+        }
+        else {
+            pieces_.emplace_back(std::make_unique<Bishop>(BLACK, coordinates, textures["b-bishop"], window_, *this));
+        }
+    }
+    else if (piece_name == KNIGHT) {
+        if (piece_color == WHITE) {
+            pieces_.emplace_back(std::make_unique<Knight>(WHITE, coordinates, textures["w-knight"], window_, *this));
+        }
+        else {
+            pieces_.emplace_back(std::make_unique<Knight>(BLACK, coordinates, textures["b-knight"], window_, *this));
+        }
+    }
 }

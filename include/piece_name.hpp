@@ -1,3 +1,5 @@
+#pragma once
+
 namespace chess {
     enum piece_name {
         PAWN,
@@ -5,6 +7,6 @@ namespace chess {
         KNIGHT,
         ROOK,
         QUEEN,
-        King
+        KING
     };
 }

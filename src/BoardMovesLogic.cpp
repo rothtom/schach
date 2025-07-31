@@ -6,8 +6,8 @@
 std::vector<chess::Move> chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
     std::vector<Move> pieces_possible_moves = {};
     Move current_move;
-    for (ChessCoordinates& target_tile : piece->get_possible_moves()) {
-        current_move = Move(piece->get_coordinates(), target_tile, *this);
+    for (std::unique_ptr<Move>& move : piece->get_possible_moves()) {
+        current_move = Move(move->get_piece_cords(), move->get_target_cords(), *this);
         if (not is_now_in_check(current_move) and not is_in_check()) {
             pieces_possible_moves.emplace_back(current_move);
         }
@@ -18,7 +18,7 @@ std::vector<chess::Move> chess::Board::pieces_moves(std::unique_ptr<chess::Piece
 
 void chess::Board::set_possible_moves(std::vector<Move> moves) {
     for (Move& move : moves) {
-        get_piece_at(move.get_piece_cords())->add_possible_move(move.get_target_cords());
+        get_piece_at(move.get_piece_cords())->add_possible_move(move);
     }
 }
 
@@ -33,7 +33,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
         pieces_possible_moves = pieces_moves(piece);
         piece->reset_possible_moves();
         for (Move& pieces_possible_move : pieces_possible_moves) {
-            piece->add_possible_move(pieces_possible_move.get_target_cords());
+            piece->add_possible_move(pieces_possible_move);
             possible_moves.emplace_back(pieces_possible_move);
         }
         if (dynamic_cast<chess::King*>(piece.get())) {
@@ -51,7 +51,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('h', 1), BLACK)) {continue;}
                             possible_rochade_move = Move(ChessCoordinates('e', 1), ChessCoordinates('g', 1), *this);
                             possible_moves.emplace_back(possible_rochade_move);
-                            piece->add_possible_move(possible_rochade_move.get_target_cords());
+                            piece->add_possible_move(possible_rochade_move);
                         case Q:
                             if (is_piece_at(ChessCoordinates('b', 1))) {continue;}
                             else if (is_piece_at(ChessCoordinates('c', 1))) {continue;}
@@ -63,7 +63,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
                             possible_rochade_move = Move(ChessCoordinates('e', 1), ChessCoordinates('c', 1), *this);
                             possible_moves.emplace_back(possible_rochade_move);
-                            piece->add_possible_move(possible_rochade_move.get_target_cords());
+                            piece->add_possible_move(possible_rochade_move);
                         default:
                             break;
                     }
@@ -81,7 +81,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('h', 8), WHITE)) {continue;}
                             possible_rochade_move = Move(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}), *this);
                             possible_moves.emplace_back(possible_rochade_move);
-                            piece->add_possible_move(possible_rochade_move.get_target_cords());
+                            piece->add_possible_move(possible_rochade_move);
                         case q:
                             if (is_piece_at(ChessCoordinates('b', 8))) {continue;}
                             else if (is_piece_at(ChessCoordinates('c', 8))) {continue;}
@@ -93,7 +93,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('e', 8), WHITE)) {continue;}
                             possible_rochade_move = Move(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}), *this);
                             possible_moves.emplace_back(possible_rochade_move);
-                            piece->add_possible_move(possible_rochade_move.get_target_cords());
+                            piece->add_possible_move(possible_rochade_move);
                         default:
                             break;
                     }
@@ -113,8 +113,8 @@ bool chess::Board::is_attacked(const chess::ChessCoordinates& tile, color attack
         if (piece->get_color() != attacking_color) {
             continue;
         }
-        for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
-            if (coordinates == tile) {
+        for (std::unique_ptr<Move>& move : piece->get_possible_moves()) {
+            if (move->get_target_cords() == tile) {
                 return true;
             }
         }
@@ -130,8 +130,8 @@ bool chess::Board::is_in_check() {
 
 bool chess::Board::is_now_in_check(Move move) {
     Board board_copy = this->deep_copy();
-    Move move_copy = move.deep_copy(board_copy);
-    move_copy.hypothetically_make_move();
+    std::unique_ptr<Move> move_copy = move.deep_copy(board_copy);
+    move_copy->hypothetically_make_move();
     bool now_check;
     
     if ((now_check = board_copy.is_in_check())) {

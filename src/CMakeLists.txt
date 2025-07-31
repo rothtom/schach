@@ -4,6 +4,7 @@ add_library(chess STATIC
             BoardAILogic.cpp
             Move.cpp
             PromotionMove.cpp
+            PromotionMove.cpp
             Piece.cpp
             King.cpp
             Queen.cpp
@@ -14,6 +15,7 @@ add_library(chess STATIC
             helpers.cpp
             ChessCoordinates.cpp
             PossibleMoveMarker.cpp
+            PossiblePromotionMarker.cpp
 )
 
 add_executable(main main.cpp)

@@ -11,6 +11,7 @@
 #include "rochade_types.hpp"
 #include "helpers.hpp"
 #include "GameStatus.hpp"
+#include "piece_name.hpp"
 
 // using move = std::pair<chess::ChessCoordinates, chess::ChessCoordinates>;
 // using moves = std::pair<chess::ChessCoordinates, std::vector<chess::ChessCoordinates>>;
@@ -59,6 +60,7 @@ namespace chess {
             chess::Piece* get_piece_at(ChessCoordinates coords);
             std::vector<std::unique_ptr<Piece>>::iterator get_piece_iterator_at(ChessCoordinates coords);
             void take_piece_at(ChessCoordinates target_cords);
+            void add_piece(piece_name piece_name, color piece_color, ChessCoordinates coordinates);
             King* get_king(color kings_color) const;
             bool is_in_check();
             bool is_checkmate();
@@ -69,6 +71,7 @@ namespace chess {
             Move best_move();
             Move best_move_white();
             Move best_move_black();
+            std::map<std::string, sf::Texture> textures;
 
         private:
             sf::RenderWindow& window_;
@@ -79,7 +82,6 @@ namespace chess {
             std::vector<std::unique_ptr<Piece>> pieces_;
             sf::RectangleShape white_tile_;
             sf::RectangleShape black_tile_;
-            std::map<std::string, sf::Texture> textures_;
             std::optional<std::reference_wrapper<Piece>> selected_piece_;
 
             Board operator=(Board& other_board);
