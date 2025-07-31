@@ -7,6 +7,8 @@
 #include "Queen.hpp"
 #include "King.hpp"
 
+#include "Move.hpp"
+
 #include <optional>
 #include <functional>
 #include <thread>
@@ -143,11 +145,7 @@ void chess::Board::update() {
             if (selected_piece_.has_value()) {
                 std::optional<ChessCoordinates> cords_to_move_to = selected_piece_->get().marker_clicked(mouse_pos);
                 if (cords_to_move_to.has_value()) {
-                    if (is_piece_at(*cords_to_move_to)) {
-                        pieces_.erase(get_piece_iterator_at(*cords_to_move_to));
-                    }
-                    chess::Piece* piece = get_piece_at(selected_piece_->get().get_coordinates());
-                    make_move(piece, *cords_to_move_to);
+                    Move(selected_piece_->get().get_coordinates(), *cords_to_move_to, *this).make_move();
                     selected_piece_.reset();
                     break;
                 }

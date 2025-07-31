@@ -12,11 +12,12 @@
 #include "helpers.hpp"
 #include "GameStatus.hpp"
 
-using move = std::pair<chess::ChessCoordinates, chess::ChessCoordinates>;
+// using move = std::pair<chess::ChessCoordinates, chess::ChessCoordinates>;
 // using moves = std::pair<chess::ChessCoordinates, std::vector<chess::ChessCoordinates>>;
 
 namespace chess {
     class King;
+    class Move;
     class Board {
         public:
             Board(sf::RenderWindow& window, std::string fen_string);
@@ -32,14 +33,12 @@ namespace chess {
             void resize();
             void update();
 
-            void make_move(chess::Piece* piece, ChessCoordinates new_cords);
-            void hypothetically_make_move(chess::Piece* piece, ChessCoordinates new_cords);
-            std::vector<move> all_possible_moves();
-            std::vector<move> pieces_moves(std::unique_ptr<Piece>& piece);
-            void set_possible_moves(std::vector<move> moves);
+            std::vector<Move> all_possible_moves();
+            std::vector<Move> pieces_moves(std::unique_ptr<Piece>& piece);
+            void set_possible_moves(std::vector<Move> moves);
 
             bool is_attacked(const ChessCoordinates& tile, color attacking_color);
-            bool is_now_in_check(const move move);
+            bool is_now_in_check(const Move move);
             // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
             // void set_possible_moves();
             void load_fen(std::string fen_string);
@@ -66,9 +65,9 @@ namespace chess {
             // ai logic
             float evaluate();
             chess::color get_current_player() const;
-            move best_move();
-            move best_move_white();
-            move best_move_black();
+            Move best_move();
+            Move best_move_white();
+            Move best_move_black();
 
         private:
             sf::RenderWindow& window_;

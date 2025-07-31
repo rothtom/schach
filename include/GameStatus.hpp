@@ -6,5 +6,6 @@ namespace chess {
         DRAW,
         WHITE_WON,
         BLACK_WON,
+        PROMOTING,
     };
 }

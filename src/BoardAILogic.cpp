@@ -7,6 +7,8 @@
 #include "Knight.hpp"
 #include "Pawn.hpp"
 
+#include "Move.hpp"
+
 
 
 float chess::Board::evaluate() {
@@ -32,15 +34,15 @@ float chess::Board::evaluate() {
     return score[WHITE] - score[BLACK];
 }
 
-move chess::Board::best_move() {
+chess::Move chess::Board::best_move() {
     std::chrono::seconds time_elapsed(0);
     
 }
 
-move chess::Board::best_move_white() {
+chess::Move chess::Board::best_move_white() {
 
 }
 
-move chess::Board::best_move_black() {
+chess::Move chess::Board::best_move_black() {
 
 }

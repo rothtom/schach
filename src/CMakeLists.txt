@@ -2,6 +2,8 @@ add_library(chess STATIC
             Board.cpp
             BoardMovesLogic.cpp
             BoardAILogic.cpp
+            Move.cpp
+            PromotionMove.cpp
             Piece.cpp
             King.cpp
             Queen.cpp
