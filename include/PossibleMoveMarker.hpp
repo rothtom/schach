@@ -6,19 +6,22 @@
 
 namespace chess {
     class Piece;
+    class Move;
     class PossibleMoveMarker {
         public:
-            PossibleMoveMarker(ChessCoordinates coordinates, float& tile_width, sf::RenderWindow& window);
+            PossibleMoveMarker(ChessCoordinates coordinates, float& tile_width, Move& move, sf::RenderWindow& window);
             
             virtual void draw();
             virtual void update_position();
             float get_radius() const;
             ChessCoordinates get_coordinates() const;
             sf::Vector2f get_position() const;
-            void resize(int new_tile_width);
+            virtual void resize(int new_tile_width);
             virtual bool is_hovered(sf::Vector2i& mouse_pos);
-            bool is_clicked(sf::Vector2i& mouse_pos);
+            virtual bool is_clicked(sf::Vector2i& mouse_pos);
+            Move& get_move() const;
         protected:
+            Move& move_;
             sf::RenderWindow& window_;
             ChessCoordinates coordinates_;
             float tile_width_;

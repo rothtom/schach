@@ -7,12 +7,12 @@
 namespace chess {
     class PossiblePromotionMarker : public PossibleMoveMarker {
         public:
-            PossiblePromotionMarker(ChessCoordinates coordinates, color pawn_color, piece_name piece_to_promote_to, float& tile_width, sf::Texture& texture, sf::RenderWindow& window);
+            PossiblePromotionMarker(ChessCoordinates coordinates, color pawn_color, piece_name piece_to_promote_to, float& tile_width, sf::Texture& texture, Move& move, sf::RenderWindow& window);
             void update_position() override;
             void draw() override;
-            std::optional<chess::piece_name> is_clicked(sf::Vector2i& mouse_pos);
+            bool is_clicked(sf::Vector2i& mouse_pos) override;
             bool is_hovered(sf::Vector2i& mouse_pos) override;
-            void resize(float new_tile_width);
+            void resize(int new_tile_width) override;
         private:
             piece_name piece_to_promote_to_;
             color pawn_color_;

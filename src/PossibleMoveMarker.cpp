@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-chess::PossibleMoveMarker::PossibleMoveMarker(chess::ChessCoordinates coordinates, float& tile_width, sf::RenderWindow& window) 
-: window_(window), coordinates_(coordinates), tile_width_(tile_width), circle_(sf::CircleShape(tile_width_ * 0.5 / 2))
+chess::PossibleMoveMarker::PossibleMoveMarker(chess::ChessCoordinates coordinates, float& tile_width, Move& move, sf::RenderWindow& window) 
+: move_(move), window_(window), coordinates_(coordinates), tile_width_(tile_width), circle_(sf::CircleShape(tile_width_ * 0.5 / 2))
 {
     circle_.setFillColor({0, 255, 255});
     update_position();
@@ -57,4 +57,8 @@ sf::Vector2f chess::PossibleMoveMarker::get_position() const {
 
 float chess::PossibleMoveMarker::get_radius() const {
     return circle_.getRadius();
+}
+
+chess::Move& chess::PossibleMoveMarker::get_move() const {
+    return move_;
 }

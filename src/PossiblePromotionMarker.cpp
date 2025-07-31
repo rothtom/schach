@@ -9,10 +9,12 @@
 #include "Knight.hpp"
 
 chess::PossiblePromotionMarker::PossiblePromotionMarker(chess::ChessCoordinates coordinates, color pawn_color, piece_name piece_to_promote_to,
-float& tile_width, sf::Texture& texture, sf::RenderWindow& window)
-: PossibleMoveMarker(coordinates, tile_width, window), piece_to_promote_to_(piece_to_promote_to), pawn_color_(pawn_color), texture_(texture), sprite_(texture_)
+float& tile_width, sf::Texture& texture, Move& move, sf::RenderWindow& window)
+: PossibleMoveMarker(coordinates, tile_width, move, window), piece_to_promote_to_(piece_to_promote_to), pawn_color_(pawn_color), texture_(texture), sprite_(texture_)
 {
     resize(tile_width_);
+    update_position();
+    sprite_.setOrigin({0, 0});
 }
 
 void chess::PossiblePromotionMarker::draw() {
@@ -32,24 +34,27 @@ void chess::PossiblePromotionMarker::update_position() {
     else if (piece_to_promote_to_ == KNIGHT) {
         sprite_.setPosition(sf::Vector2f({coordinates_.to_index().x * tile_width_ + (tile_width_ / 2), window_.getSize().y - (coordinates_.to_index().y + 1) * tile_width_ + (tile_width_ / 2)}));
     }
+    position_ = sprite_.getPosition();
 }
 
-void chess::PossiblePromotionMarker::resize(float tile_width) {
+void chess::PossiblePromotionMarker::resize(int tile_width) {
     tile_width_ = tile_width;
     sprite_scale_ = (tile_width_ / 2) / sprite_.getTexture().getSize().x;
     sprite_.setScale({sprite_scale_, sprite_scale_});
     update_position();
 }
 
-std::optional<chess::piece_name> chess::PossiblePromotionMarker::is_clicked(sf::Vector2i& mouse_pos) {
+bool chess::PossiblePromotionMarker::is_clicked(sf::Vector2i& mouse_pos) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) and is_hovered(mouse_pos)) {
-        return piece_to_promote_to_;
+        return true;
     }
+    return false;
 }
 
 bool chess::PossiblePromotionMarker::is_hovered(sf::Vector2i& mouse_pos) {
-    if (mouse_pos.x > position_.x and mouse_pos.x < position_.x + tile_width_ and
-        mouse_pos.y > position_.y and mouse_pos.y < position_.y + tile_width_) {
+    if (mouse_pos.x > position_.x and mouse_pos.x < position_.x + tile_width_ / 2 and
+        mouse_pos.y > position_.y and mouse_pos.y < position_.y + tile_width_ / 2) {
+            std::cout << "Hovering " << piece_to_promote_to_ << std::endl;
             return true;
     }
     return false;

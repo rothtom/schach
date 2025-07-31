@@ -46,10 +46,10 @@ void chess::Move::set_board(Board& board) {
     board_ = &board;
 }
 
-std::unique_ptr<chess::Move> chess::Move::deep_copy(chess::Board& new_board) {
-    Move move_copy(*this);
-    move_copy.set_board(new_board);
-    return std::make_unique<Move>(move_copy);
+std::unique_ptr<chess::Move> chess::Move::deep_copy(chess::Board& new_board) const {
+    std::unique_ptr<Move> move_copy = std::make_unique<Move>(*this);
+    move_copy->set_board(new_board);
+    return move_copy;
 }
 
 chess::piece_name chess::Move::get_piece_name_to_promote_to() const {

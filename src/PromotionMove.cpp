@@ -7,6 +7,7 @@ chess::PromotionMove::PromotionMove(const ChessCoordinates& piece_cords, const C
 
 void chess::PromotionMove::make_move() {
     if (board_->is_piece_at(target_cords_)) {
+        std::cout << "Taking piece to promote" << std::endl;
         board_->take_piece_at(target_cords_);
     }
     board_->take_piece_at(piece_cords_);
@@ -44,10 +45,9 @@ chess::piece_name chess::PromotionMove::get_piece_name_to_promote_to() const {
     return piece_to_promote_to_;
 }
 
-/*
-std::unique_ptr<chess::Move> chess::Move::deep_copy(chess::Board& new_board) {
-    Move move_copy(*this);
+
+std::unique_ptr<chess::Move> chess::PromotionMove::deep_copy(chess::Board& new_board) const {
+    PromotionMove move_copy(*this);
     move_copy.set_board(new_board);
-    return std::make_unique<Move>(move_copy);
+    return std::make_unique<PromotionMove>(std::move(move_copy));
 }
-*/

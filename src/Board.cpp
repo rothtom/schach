@@ -8,6 +8,7 @@
 #include "King.hpp"
 
 #include "Move.hpp"
+#include "PromotionMove.hpp"
 
 #include <optional>
 #include <functional>
@@ -143,9 +144,9 @@ void chess::Board::update() {
             
             sf::Vector2i mouse_pos = mouseButtonPressed->position;
             if (selected_piece_.has_value()) {
-                std::optional<ChessCoordinates> cords_to_move_to = selected_piece_->get().marker_clicked(mouse_pos);
-                if (cords_to_move_to.has_value()) {
-                    Move(selected_piece_->get().get_coordinates(), *cords_to_move_to, *this).make_move();
+                std::optional<Move*> move = selected_piece_->get().marker_clicked(mouse_pos);
+                if (move.has_value()) {
+                    move.value()->make_move();
                     selected_piece_.reset();
                     break;
                 }
@@ -327,36 +328,41 @@ chess::color chess::Board::get_current_player() const {
 }
 
 void chess::Board::add_piece(piece_name piece_name, color piece_color, ChessCoordinates coordinates) {
+    std::unique_ptr<Piece> new_piece;
     if (piece_name == QUEEN) {
         if (piece_color == WHITE) {
-            pieces_.emplace_back(std::make_unique<Queen>(WHITE, coordinates, textures["w-queen"], window_, *this));
+            new_piece = std::make_unique<Queen>(WHITE, coordinates, textures["w-queen"], window_, *this);
         }
         else {
-            pieces_.emplace_back(std::make_unique<Queen>(BLACK, coordinates, textures["b-queen"], window_, *this));
+            new_piece = std::make_unique<Queen>(BLACK, coordinates, textures["b-queen"], window_, *this);
         }
     }
     else if (piece_name == ROOK) {
         if (piece_color == WHITE) {
-            pieces_.emplace_back(std::make_unique<Rook>(WHITE, coordinates, textures["w-rook"], window_, *this));
+            new_piece = std::make_unique<Rook>(WHITE, coordinates, textures["w-rook"], window_, *this);
         }
         else {
-            pieces_.emplace_back(std::make_unique<Rook>(BLACK, coordinates, textures["b-rook"], window_, *this));
+            new_piece = std::make_unique<Rook>(BLACK, coordinates, textures["b-rook"], window_, *this);
         }
     }
     else if (piece_name == BISHOP) {
         if (piece_color == WHITE) {
-            pieces_.emplace_back(std::make_unique<Bishop>(WHITE, coordinates, textures["w-bishop"], window_, *this));
+            new_piece = std::make_unique<Bishop>(WHITE, coordinates, textures["w-bishop"], window_, *this);
         }
         else {
-            pieces_.emplace_back(std::make_unique<Bishop>(BLACK, coordinates, textures["b-bishop"], window_, *this));
+            new_piece = std::make_unique<Bishop>(BLACK, coordinates, textures["b-bishop"], window_, *this);
         }
     }
     else if (piece_name == KNIGHT) {
         if (piece_color == WHITE) {
-            pieces_.emplace_back(std::make_unique<Knight>(WHITE, coordinates, textures["w-knight"], window_, *this));
+            new_piece = std::make_unique<King>(WHITE, coordinates, textures["w-knight"], window_, *this);
         }
         else {
-            pieces_.emplace_back(std::make_unique<Knight>(BLACK, coordinates, textures["b-knight"], window_, *this));
+            new_piece = std::make_unique<Knight>(BLACK, coordinates, textures["b-knight"], window_, *this);
         }
     }
+    new_piece->update_position();
+    new_piece->resize(tile_width_);
+    new_piece->draw();
+    pieces_.emplace_back(std::move(new_piece));
 }
