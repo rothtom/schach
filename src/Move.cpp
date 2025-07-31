@@ -13,12 +13,12 @@ chess::Move::Move()
 
 void chess::Move::make_move() {
     if (board_->is_piece_at(target_cords_)) {
-        board_->get_pieces().erase(board_->get_piece_iterator_at(target_cords_));
+        board_->take_piece_at(target_cords_);
     }
     board_->get_piece_at(piece_cords_)->move(target_cords_);
     if (board_->is_checkmate()) {
-        board_->get_current_player() == WHITE ? board_->status = WHITE_WON : board_->status = BLACK_WON;
         std::cout << "Checkmate!" << std::endl;
+        board_->get_current_player() == WHITE ? board_->status = WHITE_WON : board_->status = BLACK_WON;
     }
     board_->get_current_player() == WHITE ? board_->current_player = BLACK : board_->current_player = WHITE;
     board_->all_possible_moves();
@@ -26,13 +26,9 @@ void chess::Move::make_move() {
 
 void chess::Move::hypothetically_make_move() {
     if (board_->is_piece_at(target_cords_)) {
-        board_->get_pieces().erase(board_->get_piece_iterator_at(target_cords_));
+        board_->take_piece_at(target_cords_);
     }
     board_->get_piece_at(piece_cords_)->move(target_cords_);
-    if (board_->is_checkmate()) {
-        board_->get_current_player() == WHITE ? board_->status = WHITE_WON : board_->status = BLACK_WON;
-        std::cout << "Checkmate!" << std::endl;
-    }
     board_->get_current_player() == WHITE ? board_->current_player = BLACK : board_->current_player = WHITE;
 }
 

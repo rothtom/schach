@@ -14,6 +14,7 @@ namespace chess {
             char coll;
             bool operator==(const ChessCoordinates& other) const;
             void operator=(const ChessCoordinates& other);
+            std::string to_string();
         private:
             
     };

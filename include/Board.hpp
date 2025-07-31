@@ -58,6 +58,7 @@ namespace chess {
             bool is_piece_at(ChessCoordinates coords);
             chess::Piece* get_piece_at(ChessCoordinates coords);
             std::vector<std::unique_ptr<Piece>>::iterator get_piece_iterator_at(ChessCoordinates coords);
+            void take_piece_at(ChessCoordinates target_cords);
             King* get_king(color kings_color) const;
             bool is_in_check();
             bool is_checkmate();

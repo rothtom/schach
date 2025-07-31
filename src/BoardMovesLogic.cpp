@@ -5,20 +5,20 @@
 
 std::vector<chess::Move> chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
     std::vector<Move> pieces_possible_moves = {};
+    Move current_move;
     for (ChessCoordinates& target_tile : piece->get_possible_moves()) {
-        Move current_move(piece->get_coordinates(), target_tile, *this);
+        current_move = Move(piece->get_coordinates(), target_tile, *this);
         if (not is_now_in_check(current_move) and not is_in_check()) {
             pieces_possible_moves.emplace_back(current_move);
         }
     }
     // set possible moves for piece
-    
     return pieces_possible_moves;
 }
 
 void chess::Board::set_possible_moves(std::vector<Move> moves) {
     for (Move& move : moves) {
-        get_piece_at(move.get_target_cords())->add_possible_move(move.get_target_cords());
+        get_piece_at(move.get_piece_cords())->add_possible_move(move.get_target_cords());
     }
 }
 
@@ -26,13 +26,15 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
     std::vector<Move> possible_moves;
     std::vector<Move>pieces_possible_moves;
     for (std::unique_ptr<Piece>& piece : pieces_) {
-        if (piece->get_color() == current_player) {
-            pieces_possible_moves = pieces_moves(piece);
-            piece->reset_possible_moves();
-            for (Move& pieces_possible_move : pieces_possible_moves) {
-                piece->add_possible_move(pieces_possible_move.get_target_cords());
-                possible_moves.emplace_back(pieces_possible_move);
-            }
+        if (piece->get_color() != current_player) {
+            continue;
+        }
+        // set possible moves for the piece
+        pieces_possible_moves = pieces_moves(piece);
+        piece->reset_possible_moves();
+        for (Move& pieces_possible_move : pieces_possible_moves) {
+            piece->add_possible_move(pieces_possible_move.get_target_cords());
+            possible_moves.emplace_back(pieces_possible_move);
         }
         if (dynamic_cast<chess::King*>(piece.get())) {
             Move possible_rochade_move;
@@ -47,7 +49,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('f', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('g', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('h', 1), BLACK)) {continue;}
-                            possible_rochade_move = Move(ChessCoordinates({'e', 1}), ChessCoordinates({'g', 1}), *this);
+                            possible_rochade_move = Move(ChessCoordinates('e', 1), ChessCoordinates('g', 1), *this);
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.get_target_cords());
                         case Q:
@@ -59,7 +61,7 @@ std::vector<chess::Move> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('c', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('d', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
-                            possible_rochade_move = Move(ChessCoordinates({'e', 1}), ChessCoordinates({'c', 8}), *this);
+                            possible_rochade_move = Move(ChessCoordinates('e', 1), ChessCoordinates('c', 1), *this);
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.get_target_cords());
                         default:
@@ -138,10 +140,6 @@ bool chess::Board::is_now_in_check(Move move) {
     return now_check;
 }
 
-
-
-
-
 bool chess::Board::is_checkmate() {
     if (not is_in_check()) {
         return false;
@@ -164,4 +162,9 @@ chess::King* chess::Board::get_king(chess::color kings_color) const {
         }
     }
     kings_color == WHITE ? throw std::runtime_error("no white king found") : throw std::runtime_error("no black king found");
+}
+
+
+void chess::Board::take_piece_at(chess::ChessCoordinates target_cords) {
+    pieces_.erase(get_piece_iterator_at(target_cords));
 }

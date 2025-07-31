@@ -20,3 +20,6 @@ void chess::ChessCoordinates::operator=(const ChessCoordinates& other) {
     coll = other.coll;
 }
 
+std::string chess::ChessCoordinates::to_string() {
+    return std::string(coll + std::to_string(row));
+}
