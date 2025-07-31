@@ -43,6 +43,10 @@ std::vector<move> chess::Board::all_possible_moves() {
                         case K:
                             if (is_piece_at(ChessCoordinates('f', 1))) {continue;}
                             else if (is_piece_at(ChessCoordinates('g', 1))) {continue;}
+                            if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('f', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('g', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('h', 1), BLACK)) {continue;}
                             possible_rochade_move = move(ChessCoordinates({'e', 1}), ChessCoordinates({'g', 1}));
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.second);
@@ -50,6 +54,11 @@ std::vector<move> chess::Board::all_possible_moves() {
                             if (is_piece_at(ChessCoordinates('b', 1))) {continue;}
                             else if (is_piece_at(ChessCoordinates('c', 1))) {continue;}
                             else if (is_piece_at(ChessCoordinates('d', 1))) {continue;}
+                            if (is_attacked(ChessCoordinates('a', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('b', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('c', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('d', 1), BLACK)) {continue;}
+                            else if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
                             possible_rochade_move = move(ChessCoordinates({'e', 1}), ChessCoordinates({'c', 8}));
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.second);
@@ -64,6 +73,10 @@ std::vector<move> chess::Board::all_possible_moves() {
                         case k:
                             if (is_piece_at(ChessCoordinates('f', 8))) {continue;}
                             else if (is_piece_at(ChessCoordinates('g', 8))) {continue;}
+                            if (is_attacked(ChessCoordinates('e', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('f', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('g', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('h', 8), WHITE)) {continue;}
                             possible_rochade_move = move(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}));
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.second);
@@ -71,6 +84,11 @@ std::vector<move> chess::Board::all_possible_moves() {
                             if (is_piece_at(ChessCoordinates('b', 8))) {continue;}
                             else if (is_piece_at(ChessCoordinates('c', 8))) {continue;}
                             else if (is_piece_at(ChessCoordinates('d', 8))) {continue;}
+                            if (is_attacked(ChessCoordinates('a', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('b', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('c', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('d', 8), WHITE)) {continue;}
+                            else if (is_attacked(ChessCoordinates('e', 8), WHITE)) {continue;}
                             possible_rochade_move = move(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}));
                             possible_moves.emplace_back(possible_rochade_move);
                             piece->add_possible_move(possible_rochade_move.second);
@@ -88,11 +106,9 @@ std::vector<move> chess::Board::all_possible_moves() {
 
 
 
-bool chess::Board::is_attacked(const chess::ChessCoordinates& tile) {
-    color attacking_color;
-    current_player == WHITE ? attacking_color = BLACK : attacking_color = WHITE;
+bool chess::Board::is_attacked(const chess::ChessCoordinates& tile, color attacking_color) {
     for (const std::unique_ptr<Piece>& piece : pieces_) {
-        if (piece->get_color() == attacking_color) {
+        if (piece->get_color() != attacking_color) {
             continue;
         }
         for (chess::ChessCoordinates coordinates : piece->get_possible_moves()) {
@@ -107,7 +123,7 @@ bool chess::Board::is_attacked(const chess::ChessCoordinates& tile) {
 bool chess::Board::is_in_check() {
     color kings_color;
     current_player == WHITE ? kings_color = BLACK : kings_color = WHITE;
-    return is_attacked(get_king(kings_color)->get_coordinates());
+    return is_attacked(get_king(kings_color)->get_coordinates(), current_player);
 }
 
 bool chess::Board::is_now_in_check(move move) {

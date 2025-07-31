@@ -38,7 +38,7 @@ namespace chess {
             std::vector<move> pieces_moves(std::unique_ptr<Piece>& piece);
             void set_possible_moves(std::vector<move> moves);
 
-            bool is_attacked(const ChessCoordinates& tile);
+            bool is_attacked(const ChessCoordinates& tile, color attacking_color);
             bool is_now_in_check(const move move);
             // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
             // void set_possible_moves();
