@@ -2,6 +2,7 @@
 
 #include "Board.hpp"
 #include "Move.hpp"
+#include "NormalMove.hpp"
 #include "PromotionMove.hpp"
 #include "PossibleMoveMarker.hpp"
 #include "PossiblePromotionMarker.hpp"
@@ -29,14 +30,14 @@ std::vector<std::unique_ptr<chess::Move>> chess::Pawn::get_possible_moves() {
             possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_infront_1, KNIGHT, *board_));
         }
         else {
-            possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_1, *board_));
+            possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, tile_infront_1, *board_));
         }
         chess::ChessCoordinates tile_infront_2;
         if (color_ == WHITE ) {
             if (coordinates_.row == 2) {
                 tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row + 2)});
                 if (not board_->is_piece_at(tile_infront_2)) {
-                    possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_2, *board_));
+                    possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, tile_infront_2, *board_));
                 }
             }
         }
@@ -45,7 +46,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Pawn::get_possible_moves() {
                 tile_infront_2 = chess::ChessCoordinates({coordinates_.coll, static_cast<unsigned short>(coordinates_.row - 2)});
                 if (coordinates_.row == 7) {
                     if (not board_->is_piece_at(tile_infront_2)) {
-                        possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_infront_2, *board_));
+                        possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, tile_infront_2, *board_));
                     }
                 }
             }
@@ -69,7 +70,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Pawn::get_possible_moves() {
                 possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_diagonal_1, KNIGHT, *board_));
             }
             else {
-                possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_diagonal_1, *board_));
+                possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, tile_diagonal_1, *board_));
             }
         }
     }
@@ -90,7 +91,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Pawn::get_possible_moves() {
                 possible_moves.emplace_back(std::make_unique<PromotionMove>(coordinates_, tile_diagonal_2, KNIGHT, *board_));
             }
             else {
-                possible_moves.emplace_back(std::make_unique<Move>(coordinates_, tile_diagonal_2, *board_));
+                possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, tile_diagonal_2, *board_));
             }
         }
     }
@@ -102,9 +103,11 @@ std::unique_ptr<chess::Piece> chess::Pawn::deep_copy(Board& board) {
     std::unique_ptr<Pawn> copy = std::make_unique<Pawn>(*this);
     copy->setTexture(texture_);
     copy->setBoard(board);
-    for (const auto& move : possible_moves_) {
+    /*
+    for (const std::unique_ptr<Move>& move : possible_moves_) {
         copy->possible_moves_.emplace_back(move->deep_copy(board));
     }
+    */
     return copy;
 }
 

@@ -2,11 +2,12 @@
 
 #include "King.hpp"
 #include "Move.hpp"
+#include "NormalMove.hpp"
 
 std::vector<std::unique_ptr<chess::Move>> chess::Board::pieces_moves(std::unique_ptr<chess::Piece>& piece) {
     std::vector<std::unique_ptr<Move>> pieces_possible_moves = {};
     for (std::unique_ptr<Move>& move : piece->get_possible_moves()) {
-        if (not is_now_in_check(*move) and not is_in_check()) {
+        if (not is_now_in_check(move) and not is_in_check()) {
             pieces_possible_moves.emplace_back(std::move(move));
         }
     }
@@ -42,7 +43,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('f', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('g', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('h', 1), BLACK)) {continue;}
-                            possible_rochade_move = std::make_unique<Move>(ChessCoordinates('e', 1), ChessCoordinates('g', 1), *this);
+                            possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates('e', 1), ChessCoordinates('g', 1), *this);
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                             piece->add_possible_move(possible_rochade_move);
                         case Q:
@@ -54,7 +55,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('c', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('d', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
-                            possible_rochade_move = std::make_unique<Move>(ChessCoordinates('e', 1), ChessCoordinates('c', 1), *this);
+                            possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates('e', 1), ChessCoordinates('c', 1), *this);
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                             piece->add_possible_move(possible_rochade_move);
                         default:
@@ -72,7 +73,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('f', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('g', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('h', 8), WHITE)) {continue;}
-                            possible_rochade_move = std::make_unique<Move>(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}), *this);
+                            possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}), *this);
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                             piece->add_possible_move(possible_rochade_move);
                         case q:
@@ -84,7 +85,7 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('c', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('d', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('e', 8), WHITE)) {continue;}
-                            possible_rochade_move = std::make_unique<Move>(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}), *this);
+                            possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}), *this);
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                             piece->add_possible_move(possible_rochade_move);
                         default:
@@ -121,26 +122,20 @@ bool chess::Board::is_in_check() {
     return is_attacked(get_king(kings_color)->get_coordinates(), current_player);
 }
 
-bool chess::Board::is_now_in_check(Move move) {
+bool chess::Board::is_now_in_check(const std::unique_ptr<Move>& move) {
     Board board_copy = this->deep_copy();
-    std::unique_ptr<Move> move_copy = move.deep_copy(board_copy);
+    std::unique_ptr<Move> move_copy = move->deep_copy(board_copy);
     move_copy->hypothetically_make_move();
     bool now_check;
     
     if ((now_check = board_copy.is_in_check())) {
         // std::cout << "eliminated move: " << move.second.coll << move.second.row << std::endl;
     }
-    return now_check;
+    return board_copy.is_in_check();
 }
 
 bool chess::Board::is_checkmate() {
-    if (not is_in_check()) {
-        return false;
-    }
-    if (not all_possible_moves().empty()) {
-        return false;
-    }
-    return true;
+    return is_in_check() && all_possible_moves().empty();
 }
 
 chess::King* chess::Board::get_king(chess::color kings_color) const {

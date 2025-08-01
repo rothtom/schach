@@ -2,6 +2,7 @@
 
 #include "Board.hpp"
 #include "Move.hpp"
+#include "NormalMove.hpp"
 
 chess::Queen::Queen(chess::color piece_color, ChessCoordinates coordinates, sf::Texture& texture, sf::RenderWindow& window, Board& board)
 : Piece(piece_color, coordinates, texture, window, board)
@@ -32,12 +33,12 @@ std::vector<std::unique_ptr<chess::Move>> chess::Queen::get_possible_moves() {
 
             if (board_->is_piece_at(considered_cords)) {
                 if (board_->get_piece_at(considered_cords)->get_color() != color_) {
-                    possible_moves.emplace_back(std::make_unique<Move>(coordinates_, considered_cords, *board_));
+                    possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, considered_cords, *board_));
                 }
                 break;
             }
             else {
-                possible_moves.emplace_back(std::make_unique<Move>(coordinates_, considered_cords, *board_));
+                possible_moves.emplace_back(std::make_unique<NormalMove>(coordinates_, considered_cords, *board_));
             }
         }
     }
@@ -48,8 +49,10 @@ std::unique_ptr<chess::Piece> chess::Queen::deep_copy(Board& board) {
     std::unique_ptr<Queen> copy = std::make_unique<Queen>(*this);
     copy->setTexture(texture_);
     copy->setBoard(board);
-    for (const auto& move : possible_moves_) {
+    /*
+    for (const std::unique_ptr<Move>& move : possible_moves_) {
         copy->possible_moves_.emplace_back(move->deep_copy(board));
     }
+    */
     return copy;
 }

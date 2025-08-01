@@ -146,6 +146,8 @@ void chess::Board::update() {
             if (selected_piece_.has_value()) {
                 std::optional<Move*> move = selected_piece_->get().marker_clicked(mouse_pos);
                 if (move.has_value()) {
+                    std::cout << "Drawing board: " << this << std::endl;
+                    move.value()->set_board(*this);
                     move.value()->make_move();
                     selected_piece_.reset();
                     break;

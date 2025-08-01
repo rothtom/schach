@@ -38,8 +38,7 @@ namespace chess {
             std::vector<std::unique_ptr<Move>> pieces_moves(std::unique_ptr<Piece>& piece);
             //void set_possible_moves(std::vector<Move> moves);
 
-            bool is_attacked(const ChessCoordinates& tile, color attacking_color);
-            bool is_now_in_check(const Move move);
+           
             // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
             // void set_possible_moves();
             void load_fen(std::string fen_string);
@@ -62,15 +61,17 @@ namespace chess {
             void take_piece_at(ChessCoordinates target_cords);
             void add_piece(piece_name piece_name, color piece_color, ChessCoordinates coordinates);
             King* get_king(color kings_color) const;
+            bool is_attacked(const ChessCoordinates& tile, color attacking_color);
+            bool is_now_in_check(const std::unique_ptr<Move>& move);
             bool is_in_check();
             bool is_checkmate();
             game_status status;
             // ai logic
             float evaluate();
             chess::color get_current_player() const;
-            Move best_move();
-            Move best_move_white();
-            Move best_move_black();
+            Move* best_move();
+            Move* best_move_white();
+            Move* best_move_black();
             std::map<std::string, sf::Texture> textures;
 
         private:

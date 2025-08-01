@@ -34,15 +34,15 @@ float chess::Board::evaluate() {
     return score[WHITE] - score[BLACK];
 }
 
-chess::Move chess::Board::best_move() {
+chess::Move* chess::Board::best_move() {
     std::chrono::seconds time_elapsed(0);
     
 }
 
-chess::Move chess::Board::best_move_white() {
+chess::Move* chess::Board::best_move_white() {
 
 }
 
-chess::Move chess::Board::best_move_black() {
+chess::Move* chess::Board::best_move_black() {
 
 }

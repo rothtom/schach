@@ -3,6 +3,7 @@ add_library(chess STATIC
             BoardMovesLogic.cpp
             BoardAILogic.cpp
             Move.cpp
+            NormalMove.cpp
             PromotionMove.cpp
             Piece.cpp
             King.cpp

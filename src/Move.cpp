@@ -7,12 +7,6 @@ chess::Move::Move(const ChessCoordinates& piece_cords, const ChessCoordinates& t
     board_ = &board;
 }
 
-chess::Move::Move(const Move& other) 
-: piece_cords_(other.piece_cords_), target_cords_(other.target_cords_)
-{
-    
-}
-
 void chess::Move::make_move() {
     if (board_->is_piece_at(target_cords_)) {
         board_->take_piece_at(target_cords_);
@@ -20,7 +14,9 @@ void chess::Move::make_move() {
     board_->get_piece_at(piece_cords_)->move(target_cords_);
     if (board_->is_checkmate()) {
         std::cout << "Checkmate!" << std::endl;
+        std::cout << "Checkamte checked board: " << board_ << std::endl;
         board_->get_current_player() == WHITE ? board_->status = WHITE_WON : board_->status = BLACK_WON;
+        std::cout << "Got switched players" << std::endl;
     }
     board_->get_current_player() == WHITE ? board_->current_player = BLACK : board_->current_player = WHITE;
     board_->all_possible_moves();
@@ -44,12 +40,6 @@ chess::ChessCoordinates chess::Move::get_target_cords() const {
 
 void chess::Move::set_board(Board& board) {
     board_ = &board;
-}
-
-std::unique_ptr<chess::Move> chess::Move::deep_copy(chess::Board& new_board) const {
-    std::unique_ptr<Move> move_copy = std::make_unique<Move>(*this);
-    move_copy->set_board(new_board);
-    return move_copy;
 }
 
 chess::piece_name chess::Move::get_piece_name_to_promote_to() const {
