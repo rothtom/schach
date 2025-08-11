@@ -126,12 +126,14 @@ bool chess::Board::is_now_in_check(const std::unique_ptr<Move>& move) {
     Board board_copy = this->deep_copy();
     std::unique_ptr<Move> move_copy = move->deep_copy(board_copy);
     move_copy->hypothetically_make_move();
-    bool now_check;
-    
-    if ((now_check = board_copy.is_in_check())) {
-        // std::cout << "eliminated move: " << move.second.coll << move.second.row << std::endl;
+    bool now_check = board_copy.is_in_check();
+    /*
+    if (now_check) {
+        
+        std::cout << "eliminated move: " << move->get_target_cords().coll << move->get_target_cords().row << std::endl;
     }
-    return board_copy.is_in_check();
+    */
+    return now_check;
 }
 
 bool chess::Board::is_checkmate() {
@@ -145,6 +147,7 @@ chess::King* chess::Board::get_king(chess::color kings_color) const {
                 // std::cout << typeid(*king).name() << std::endl;
                 // std::cout << "Piece_cords: " << piece->get_coordinates().coll << piece->get_coordinates().row << std::endl;
                 // std::cout << "Kings_cord: " << king->get_coordinates().coll << king->get_coordinates().row << std::endl;
+                // std::cout << "King found at: " << king->get_coordinates().coll << king->get_coordinates().row << std::endl;
                 return king;
             }
         }

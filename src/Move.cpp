@@ -1,5 +1,6 @@
 #include "Move.hpp"
 #include "Board.hpp"
+#include "King.hpp"
 
 chess::Move::Move(const ChessCoordinates& piece_cords, const ChessCoordinates& target_cords, Board& board) 
 : piece_cords_(piece_cords), target_cords_(target_cords)
@@ -12,12 +13,6 @@ void chess::Move::make_move() {
         board_->take_piece_at(target_cords_);
     }
     board_->get_piece_at(piece_cords_)->move(target_cords_);
-    if (board_->is_checkmate()) {
-        std::cout << "Checkmate!" << std::endl;
-        std::cout << "Checkamte checked board: " << board_ << std::endl;
-        board_->get_current_player() == WHITE ? board_->status = WHITE_WON : board_->status = BLACK_WON;
-        std::cout << "Got switched players" << std::endl;
-    }
     board_->get_current_player() == WHITE ? board_->current_player = BLACK : board_->current_player = WHITE;
     board_->all_possible_moves();
 }

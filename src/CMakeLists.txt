@@ -20,11 +20,11 @@ add_library(chess STATIC
 
 add_executable(main main.cpp)
 
-target_include_directories(chess
-    PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-    ${SFML_INCLUDE_DIRS} # optional: usually not needed if using SFML:: targets
-)
+# target_include_directories(chess
+    # PUBLIC
+    # ${PROJECT_SOURCE_DIR}/include
+    #${SFML_INCLUDE_DIRS} # optional: usually not needed if using SFML:: targets
+# )
 
 target_link_libraries(main
                         SFML::Window
