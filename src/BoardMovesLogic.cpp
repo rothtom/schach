@@ -137,6 +137,8 @@ bool chess::Board::is_now_in_check(const std::unique_ptr<Move>& move) {
 }
 
 bool chess::Board::is_checkmate() {
+    // std::cout << is_in_check() << std::endl;
+    // std::cout << all_possible_moves().empty() << std::endl;
     return is_in_check() && all_possible_moves().empty();
 }
 

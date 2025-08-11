@@ -149,6 +149,19 @@ void chess::Board::update() {
                     move.value()->set_board(*this);
                     move.value()->make_move();
                     selected_piece_.reset();
+                    current_player == WHITE ? current_player = BLACK : current_player = WHITE;
+                    if (is_checkmate()) {
+                        std::cout << "Checkmate!" << std::endl;
+                        if (current_player == WHITE) {
+                            status = WHITE_WON;
+                            std::cout << "White won!" << std::endl;
+                        }
+                        else {
+                            status = BLACK_WON;
+                            std::cout << "Black won!" << std::endl;
+                        }
+                    }
+                    current_player == WHITE ? current_player = BLACK : current_player = WHITE;
                     break;
                 }
             }
