@@ -28,7 +28,8 @@ status(ON_GOING)
 
     load_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     resize();
-    all_possible_moves();
+    std::vector<std::unique_ptr<Move>> possible_moves = all_possible_moves();
+    set_possible_moves(possible_moves);
 
     colors_players_[WHITE] = HUMAN;
     colors_players_[BLACK] = AI;
@@ -386,3 +387,4 @@ void chess::Board::add_piece(piece_name piece_name, color piece_color, ChessCoor
     new_piece->draw();
     pieces_.emplace_back(std::move(new_piece));
 }
+

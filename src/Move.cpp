@@ -14,7 +14,8 @@ void chess::Move::make_move() {
     }
     board_->get_piece_at(piece_cords_)->move(target_cords_);
     board_->get_current_player() == WHITE ? board_->current_player = BLACK : board_->current_player = WHITE;
-    board_->all_possible_moves();
+    std::vector<std::unique_ptr<Move>> possible_moves = board_->all_possible_moves();
+    board_->set_possible_moves(possible_moves);
 }
 
 void chess::Move::hypothetically_make_move() {

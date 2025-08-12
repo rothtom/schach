@@ -36,7 +36,7 @@ namespace chess {
 
             std::vector<std::unique_ptr<Move>> all_possible_moves();
             std::vector<std::unique_ptr<Move>> pieces_moves(std::unique_ptr<Piece>& piece);
-            //void set_possible_moves(std::vector<Move> moves);
+            void set_possible_moves(std::vector<std::unique_ptr<Move>>& moves);
 
            
             // std::vector<ChessCoordinates> possible_moves(const std::unique_ptr<Piece>& piece);
@@ -70,8 +70,8 @@ namespace chess {
             float evaluate();
             chess::color get_current_player() const;
             std::unique_ptr<chess::Move> best_move(int max_depth);
-            std::unique_ptr<chess::Move> best_move_white(int depth, int max_depth);
-            std::unique_ptr<chess::Move> best_move_black(int depth, int max_depth);
+            std::unique_ptr<chess::Move> best_move_white(int depth, int max_depth, int alpha, int beta);
+            std::unique_ptr<chess::Move> best_move_black(int depth, int max_depth, int alpha, int beta);
             std::map<std::string, sf::Texture> textures;
 
         private:

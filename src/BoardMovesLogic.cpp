@@ -27,7 +27,6 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
         pieces_possible_moves = pieces_moves(piece);
         piece->reset_possible_moves();
         for (std::unique_ptr<Move>& pieces_possible_move : pieces_possible_moves) {
-            piece->add_possible_move(pieces_possible_move->deep_copy(*this));
             possible_moves.emplace_back(std::move(pieces_possible_move));
         }
         if (dynamic_cast<chess::King*>(piece.get())) {
@@ -44,7 +43,6 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('g', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('h', 1), BLACK)) {continue;}
                             possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates('e', 1), ChessCoordinates('g', 1), *this);
-                            piece->add_possible_move(possible_rochade_move->deep_copy(*this));
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                         case Q:
                             if (is_piece_at(ChessCoordinates('b', 1))) {continue;}
@@ -56,7 +54,6 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('d', 1), BLACK)) {continue;}
                             else if (is_attacked(ChessCoordinates('e', 1), BLACK)) {continue;}
                             possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates('e', 1), ChessCoordinates('c', 1), *this);
-                            piece->add_possible_move(possible_rochade_move->deep_copy(*this));
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                         default:
                             break;
@@ -74,7 +71,6 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('g', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('h', 8), WHITE)) {continue;}
                             possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates({'e', 8}), ChessCoordinates({'g', 8}), *this);
-                            piece->add_possible_move(possible_rochade_move->deep_copy(*this));
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                         case q:
                             if (is_piece_at(ChessCoordinates('b', 8))) {continue;}
@@ -86,7 +82,6 @@ std::vector<std::unique_ptr<chess::Move>> chess::Board::all_possible_moves() {
                             else if (is_attacked(ChessCoordinates('d', 8), WHITE)) {continue;}
                             else if (is_attacked(ChessCoordinates('e', 8), WHITE)) {continue;}
                             possible_rochade_move = std::make_unique<NormalMove>(ChessCoordinates({'e', 8}), ChessCoordinates({'c', 8}), *this);
-                            piece->add_possible_move(possible_rochade_move->deep_copy(*this));
                             possible_moves.emplace_back(std::move(possible_rochade_move));
                         default:
                             break;
@@ -160,4 +155,10 @@ chess::King* chess::Board::get_king(chess::color kings_color) const {
 
 void chess::Board::take_piece_at(chess::ChessCoordinates target_cords) {
     pieces_.erase(get_piece_iterator_at(target_cords));
+}
+
+void chess::Board::set_possible_moves(std::vector<std::unique_ptr<chess::Move>>& moves) {
+    for (auto& move : moves) {
+        get_piece_at(move->get_piece_cords())->add_possible_move(move->deep_copy(*this));
+    }
 }
