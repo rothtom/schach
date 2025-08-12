@@ -30,12 +30,17 @@ float chess::Board::evaluate() {
             score[pawn->get_color()] += 1;
         }
     }
-    if (status == BLACK_WON) {
+    current_player == WHITE ? current_player = BLACK : current_player = WHITE;
+    if (is_checkmate()) {
+        if(current_player == BLACK) {
             score[BLACK] += 50;
         }
-    else if (status == WHITE_WON) {
-        score[WHITE] += 50;
+        else {
+            score[WHITE] += 50;
+        }
+        
     }
+    current_player == WHITE ? current_player = BLACK : current_player = WHITE;
     return score[WHITE] - score[BLACK];
 }
 
