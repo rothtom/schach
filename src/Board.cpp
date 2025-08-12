@@ -31,7 +31,7 @@ status(ON_GOING)
     std::vector<std::unique_ptr<Move>> possible_moves = all_possible_moves();
     set_possible_moves(possible_moves);
 
-    colors_players_[WHITE] = HUMAN;
+    colors_players_[WHITE] = AI;
     colors_players_[BLACK] = AI;
 }
 
@@ -49,7 +49,8 @@ status(ON_GOING)
 
     load_fen(fen_string);
     resize();
-    all_possible_moves();
+    std::vector<std::unique_ptr<Move>> possible_moves = all_possible_moves();
+    set_possible_moves(possible_moves);
 
     colors_players_[WHITE] = HUMAN;
     colors_players_[BLACK] = AI;
