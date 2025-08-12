@@ -121,7 +121,7 @@ void chess::Piece::select() {
     update_position();
 }
 
-void chess::Piece::add_possible_move(std::unique_ptr<chess::Move>& possible_move) {
+void chess::Piece::add_possible_move(std::unique_ptr<chess::Move> possible_move) {
     possible_moves_.emplace_back(std::move(possible_move));
 }
 

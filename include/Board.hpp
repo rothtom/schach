@@ -69,9 +69,9 @@ namespace chess {
             // ai logic
             float evaluate();
             chess::color get_current_player() const;
-            Move* best_move();
-            Move* best_move_white();
-            Move* best_move_black();
+            std::unique_ptr<chess::Move> best_move(int max_depth);
+            std::unique_ptr<chess::Move> best_move_white(int depth, int max_depth);
+            std::unique_ptr<chess::Move> best_move_black(int depth, int max_depth);
             std::map<std::string, sf::Texture> textures;
 
         private:

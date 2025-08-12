@@ -31,7 +31,7 @@ status(ON_GOING)
     all_possible_moves();
 
     colors_players_[WHITE] = HUMAN;
-    colors_players_[BLACK] = HUMAN;
+    colors_players_[BLACK] = AI;
 }
 
 chess::Board::Board(sf::RenderWindow& window, std::string fen_string)
@@ -138,6 +138,12 @@ void chess::Board::update() {
         }
         else if (event->is<sf::Event::Resized>()) {
             resize();
+        }
+        else if (colors_players_[current_player] == AI and status == ON_GOING) {
+            std::unique_ptr<Move> ai_move = best_move(2);
+            ai_move->set_board(*this);
+            std::cout << "AI moving to: " << ai_move->get_target_cords().coll << ai_move->get_target_cords().row << std::endl;
+            ai_move->make_move();
         }
         else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>();
                 mouseButtonPressed && colors_players_[current_player] == HUMAN) {

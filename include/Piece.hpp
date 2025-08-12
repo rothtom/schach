@@ -34,7 +34,7 @@ namespace chess {
             std::optional<Move*> marker_clicked(sf::Vector2i& mouse_pos);
             virtual void move(ChessCoordinates new_coordinates);
 
-            void add_possible_move(std::unique_ptr<Move>& possible_move);
+            void add_possible_move(std::unique_ptr<Move> possible_move);
             void reset_possible_moves();
             const ChessCoordinates& get_coordinates() const;
             const color& get_color() const;
